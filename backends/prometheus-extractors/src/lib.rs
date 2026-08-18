@@ -1,8 +1,10 @@
 //! URL extractors and registry.
 
+#![deny(missing_docs)]
+
 mod generic_http;
 
-pub use generic_http::GenericHttp;
+pub use generic_http::{GenericHttp, filename_from_content_disposition};
 
 use prometheus_types::{Error, MediaInfo, Result};
 

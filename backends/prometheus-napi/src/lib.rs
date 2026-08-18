@@ -1,5 +1,6 @@
 //! Node-API bindings for Prometheus.
 
+#![deny(missing_docs)]
 #![deny(clippy::all)]
 
 use napi::bindgen_prelude::*;

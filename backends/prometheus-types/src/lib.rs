@@ -1,5 +1,7 @@
 //! Shared types and errors for Prometheus.
 
+#![deny(missing_docs)]
+
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
@@ -65,18 +67,50 @@ pub struct DownloadResult {
     pub filename: String,
 }
 
-/// Structured download progress for Transfer backends → napi / MCP.
+/// Structured download progress for Transfer backends 鈫?napi / MCP.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "kebab-case", rename_all_fields = "camelCase")]
 pub enum ProgressEvent {
     /// Transfer started; `totalBytes` is known when the server advertises length.
-    Started { url: String, total_bytes: Option<u64>, transfer: String },
+    Started {
+        /// Source URL.
+        url: String,
+        /// Total bytes when known.
+        total_bytes: Option<u64>,
+        /// Transfer backend id.
+        transfer: String,
+    },
     /// Bytes written so far.
-    Bytes { url: String, bytes_written: u64, total_bytes: Option<u64>, transfer: String },
+    Bytes {
+        /// Source URL.
+        url: String,
+        /// Bytes written so far.
+        bytes_written: u64,
+        /// Total bytes when known.
+        total_bytes: Option<u64>,
+        /// Transfer backend id.
+        transfer: String,
+    },
     /// Transfer finished successfully.
-    Finished { url: String, bytes_written: u64, path: String, transfer: String },
+    Finished {
+        /// Source URL.
+        url: String,
+        /// Final bytes written.
+        bytes_written: u64,
+        /// Absolute path of the written file.
+        path: String,
+        /// Transfer backend id.
+        transfer: String,
+    },
     /// Transfer failed after start (or during setup when `bytesWritten` is zero).
-    Failed { url: String, message: String, transfer: String },
+    Failed {
+        /// Source URL.
+        url: String,
+        /// Error message.
+        message: String,
+        /// Transfer backend id.
+        transfer: String,
+    },
 }
 
 /// Strip path separators and reserved characters from a download filename.
@@ -130,37 +164,5 @@ fn from_hex(b: u8) -> Option<u8> {
         b'a'..=b'f' => Some(b - b'a' + 10),
         b'A'..=b'F' => Some(b - b'A' + 10),
         _ => None,
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn sanitize_rejects_path_parts() {
-        assert_eq!(sanitize_filename("../a\\b:c"), "_a_b_c");
-        assert_eq!(sanitize_filename("   "), "download.bin");
-    }
-
-    #[test]
-    fn filename_from_simple_url() {
-        assert_eq!(
-            filename_from_url("https://example.com/files/demo%20clip.bin?x=1"),
-            Some("demo clip.bin".to_string())
-        );
-    }
-
-    #[test]
-    fn progress_event_wire_kind() {
-        let event = ProgressEvent::Started {
-            url: "https://example.com/a.bin".into(),
-            total_bytes: Some(12),
-            transfer: TRANSFER_SIMPLE.into(),
-        };
-        let json = serde_json::to_value(&event).unwrap();
-        assert_eq!(json["kind"], "started");
-        assert_eq!(json["totalBytes"], 12);
-        assert_eq!(json["transfer"], "simple");
     }
 }

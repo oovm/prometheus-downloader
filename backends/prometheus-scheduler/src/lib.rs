@@ -2,6 +2,8 @@
 //!
 //! Persistence is not implemented yet.
 
+#![deny(missing_docs)]
+
 use prometheus_types::Result;
 
 /// Task states used by future queue implementations.

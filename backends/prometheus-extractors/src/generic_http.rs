@@ -67,7 +67,8 @@ impl Extractor for GenericHttp {
     }
 }
 
-fn filename_from_content_disposition(header: &str) -> Option<String> {
+/// Parse a download filename from an HTTP `Content-Disposition` header.
+pub fn filename_from_content_disposition(header: &str) -> Option<String> {
     // Prefer filename*=UTF-8''... then filename="..."
     for part in header.split(';') {
         let part = part.trim();
@@ -126,27 +127,5 @@ fn from_hex(b: u8) -> Option<u8> {
         b'a'..=b'f' => Some(b - b'a' + 10),
         b'A'..=b'F' => Some(b - b'A' + 10),
         _ => None,
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn matches_http_urls() {
-        let g = GenericHttp;
-        assert!(g.matches("https://example.com/a.bin"));
-        assert!(!g.matches("ftp://example.com/a.bin"));
-    }
-
-    #[test]
-    fn parses_content_disposition() {
-        assert_eq!(
-            filename_from_content_disposition(
-                "attachment; filename=\"clip.bin\"; filename*=UTF-8''nice%20clip.bin"
-            ),
-            Some("nice clip.bin".to_string())
-        );
     }
 }

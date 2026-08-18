@@ -282,7 +282,7 @@ function publishJs(version) {
                     fs.copyFileSync(from, to);
                 }
             }
-            for (const extra of ['package.json', 'README.md', 'Readme.md', 'License.md', 'LICENSE', 'bin']) {
+            for (const extra of ['package.json', 'README.md', 'Readme.md', 'readme.md', 'License.md', 'LICENSE', 'bin']) {
                 const from = path.join(abs, extra);
                 if (!fs.existsSync(from)) continue;
                 const to = path.join(stage, extra);
@@ -321,7 +321,11 @@ function publishJs(version) {
         delete pkg.devDependencies;
         writeJson(path.join(stage, 'package.json'), pkg);
 
-        if (!fs.existsSync(path.join(stage, 'README.md')) && !fs.existsSync(path.join(stage, 'Readme.md'))) {
+        if (
+            !fs.existsSync(path.join(stage, 'README.md')) &&
+            !fs.existsSync(path.join(stage, 'Readme.md')) &&
+            !fs.existsSync(path.join(stage, 'readme.md'))
+        ) {
             fs.writeFileSync(path.join(stage, 'README.md'), `# ${name}\n\nPrometheus package ${version}.\n`);
         }
 

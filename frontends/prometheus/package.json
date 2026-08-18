@@ -18,7 +18,7 @@
     "files": [
         "bin",
         "dist",
-        "Readme.md",
+        "readme.md",
         "License.md"
     ],
     "scripts": {

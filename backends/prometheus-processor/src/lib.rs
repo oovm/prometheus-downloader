@@ -2,6 +2,8 @@
 //!
 //! No processors are registered yet.
 
+#![deny(missing_docs)]
+
 use prometheus_types::Result;
 
 /// Placeholder identity hook reserved for future post-processors.
