@@ -20,6 +20,25 @@ export type DownloadResult = {
     filename: string;
 };
 
+export type TransferInfo = {
+    id: string;
+    available: boolean;
+};
+
+export type ProgressEvent = {
+    kind: string;
+    url: string;
+    transfer: string;
+    bytesWritten?: number | null;
+    totalBytes?: number | null;
+    path?: string | null;
+    message?: string | null;
+};
+
+export type DownloadWithEvents = DownloadResult & {
+    events: ProgressEvent[];
+};
+
 type NativeAddon = {
     version: () => string;
     info: (url: string) => {
@@ -37,6 +56,16 @@ type NativeAddon = {
         path: string;
         bytesWritten: number;
         filename: string;
+    };
+    listTransfers: () => TransferInfo[];
+    downloadWithEvents: (
+        url: string,
+        outputDir: string,
+    ) => {
+        path: string;
+        bytesWritten: number;
+        filename: string;
+        events: ProgressEvent[];
     };
     createVault: (path: string, password: string) => string;
 };

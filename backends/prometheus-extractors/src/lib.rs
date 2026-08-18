@@ -3,8 +3,10 @@
 #![deny(missing_docs)]
 
 mod generic_http;
+mod local_file;
 
 pub use generic_http::{GenericHttp, filename_from_content_disposition};
+pub use local_file::{LocalFile, file_url_to_path};
 
 use prometheus_types::{Error, MediaInfo, Result};
 
@@ -26,7 +28,7 @@ pub struct Registry {
 impl Registry {
     /// Built-in extractors shipped with this crate.
     pub fn builtin() -> Self {
-        Self { extractors: vec![Box::new(GenericHttp)] }
+        Self { extractors: vec![Box::new(LocalFile), Box::new(GenericHttp)] }
     }
 
     /// Inspect a URL with the first matching extractor.

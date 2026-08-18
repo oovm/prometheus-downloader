@@ -6,9 +6,18 @@ use std::thread;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use prometheus_downloader::{
-    SimpleTransfer, TransferBackend, default_transfer_id, download, download_with,
+    SimpleTransfer, TransferBackend, default_transfer_id, download, download_collecting_events,
+    download_with, list_transfers,
 };
 use prometheus_types::ProgressEvent;
+
+fn file_url(path: &std::path::Path) -> String {
+    let mut path = path.to_string_lossy().replace('\\', "/");
+    if !path.starts_with('/') {
+        path.insert(0, '/');
+    }
+    format!("file://{path}")
+}
 
 fn serve_head_and_get(body: &'static [u8]) -> String {
     let listener = TcpListener::bind("127.0.0.1:0").unwrap();
@@ -49,6 +58,23 @@ fn downloads_local_fixture() {
 }
 
 #[test]
+fn copies_local_file_url() {
+    let nanos = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_nanos();
+    let src_dir = std::env::temp_dir().join(format!("prometheus-src-{nanos}"));
+    fs::create_dir_all(&src_dir).unwrap();
+    let src = src_dir.join("clip.bin");
+    fs::write(&src, b"abc").unwrap();
+    let url = file_url(&src);
+    let dir = std::env::temp_dir().join(format!("prometheus-dl-file-{nanos}"));
+    let result = download(&url, &dir).unwrap();
+    assert_eq!(fs::read(&result.path).unwrap(), b"abc");
+    assert_eq!(result.bytes_written, 3);
+    assert_eq!(result.filename, "clip.bin");
+    let _ = fs::remove_dir_all(&dir);
+    let _ = fs::remove_dir_all(&src_dir);
+}
+
+#[test]
 fn emits_progress_events() {
     let url = serve_head_and_get(b"progress-body!!");
     thread::sleep(std::time::Duration::from_millis(20));
@@ -79,7 +105,28 @@ fn emits_progress_events() {
 }
 
 #[test]
+fn collects_progress_events() {
+    let url = serve_head_and_get(b"collect-me");
+    thread::sleep(std::time::Duration::from_millis(20));
+    let nanos = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_nanos();
+    let dir = std::env::temp_dir().join(format!("prometheus-dl-collect-{nanos}"));
+    let (result, events) = download_collecting_events(&SimpleTransfer, &url, &dir).unwrap();
+    assert_eq!(result.bytes_written, 10);
+    assert!(matches!(events.first(), Some(ProgressEvent::Started { .. })));
+    assert!(matches!(events.last(), Some(ProgressEvent::Finished { .. })));
+    let _ = fs::remove_dir_all(&dir);
+}
+
+#[test]
 fn default_transfer_is_simple() {
     assert_eq!(default_transfer_id(), "simple");
     assert_eq!(SimpleTransfer.id(), "simple");
+}
+
+#[test]
+fn lists_in_process_simple_only() {
+    let listed = list_transfers();
+    assert_eq!(listed.len(), 1);
+    assert_eq!(listed[0].id, "simple");
+    assert!(listed[0].available);
 }

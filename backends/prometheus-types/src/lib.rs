@@ -11,7 +11,10 @@ pub const VERSION: &str = env!("CARGO_PKG_VERSION");
 /// Extractor id for direct HTTP(S) file URLs.
 pub const EXTRACTOR_GENERIC_HTTP: &str = "generic-http";
 
-/// Transfer backend id for the single-connection HTTP client.
+/// Extractor id for local `file:` URLs.
+pub const EXTRACTOR_LOCAL_FILE: &str = "local-file";
+
+/// Transfer backend id for the in-process single-connection HTTP client.
 pub const TRANSFER_SIMPLE: &str = "simple";
 
 /// Errors returned by engine crates.
@@ -67,7 +70,7 @@ pub struct DownloadResult {
     pub filename: String,
 }
 
-/// Structured download progress for Transfer backends 鈫?napi / MCP.
+/// Structured download progress for Transfer backends → napi / MCP.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "kebab-case", rename_all_fields = "camelCase")]
 pub enum ProgressEvent {

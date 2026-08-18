@@ -130,6 +130,26 @@ test('info and download over local http', async () => {
     }
 });
 
+test('listTransfers and downloadWithEvents stay in-process', async () => {
+    ensureNative();
+    const body = Buffer.from('event-body');
+    const { url, stop } = await startFixtureServer(body);
+    try {
+        const api = await import('../dist/index.js');
+        const listed = api.listTransfers();
+        assert.deepEqual(listed, [{ id: 'simple', available: true }]);
+
+        const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'prometheus-events-'));
+        const result = api.downloadWithEvents(url, dir);
+        assert.equal(fs.readFileSync(result.path).toString('utf8'), 'event-body');
+        assert.equal(result.events[0].kind, 'started');
+        assert.equal(result.events.at(-1).kind, 'finished');
+        fs.rmSync(dir, { recursive: true, force: true });
+    } finally {
+        await stop();
+    }
+});
+
 test('cli --version', () => {
     ensureNative();
     const bin = path.join(pkgRoot, 'bin', 'prometheus.js');

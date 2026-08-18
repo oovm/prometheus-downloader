@@ -1,4 +1,4 @@
-//! Pluggable HTTP(S) transfer backends.
+//! In-process HTTP(S) transfer backends (linked into the napi cdylib).
 
 #![deny(missing_docs)]
 
@@ -24,7 +24,7 @@ pub struct TransferRequest {
     pub expected_length: Option<u64>,
 }
 
-/// Pluggable transfer implementation (`simple` now; `aria2` / `native-range` later).
+/// In-process transfer implementation (`simple` now; additional Range backends must stay in-process).
 pub trait TransferBackend: Send + Sync {
     /// Stable backend id (`kebab-case`).
     fn id(&self) -> &'static str;
@@ -79,6 +79,31 @@ pub fn download_with(
 /// Default backend id used by [`download`].
 pub fn default_transfer_id() -> &'static str {
     TRANSFER_SIMPLE
+}
+
+/// Describe built-in in-process transfer backends.
+pub fn list_transfers() -> Vec<TransferInfo> {
+    vec![TransferInfo { id: TRANSFER_SIMPLE.to_string(), available: true }]
+}
+
+/// Snapshot of a transfer backend for discovery APIs.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct TransferInfo {
+    /// Backend id (`kebab-case`).
+    pub id: String,
+    /// Whether the backend can run in this process (always true for linked backends).
+    pub available: bool,
+}
+
+/// Download collecting every [`ProgressEvent`] into a `Vec`.
+pub fn download_collecting_events(
+    backend: &dyn TransferBackend,
+    url: &str,
+    output_dir: impl AsRef<Path>,
+) -> Result<(DownloadResult, Vec<ProgressEvent>)> {
+    let mut events = Vec::new();
+    let result = download_with(backend, url, output_dir, &mut |event| events.push(event))?;
+    Ok((result, events))
 }
 
 pub(crate) fn unique_path(dir: &Path, filename: &str) -> PathBuf {

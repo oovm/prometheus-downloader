@@ -1,8 +1,9 @@
-//! Single-connection HTTP(S) transfer backend.
+//! In-process single-connection transfer backend.
 
 use std::fs::File;
 use std::io::{BufWriter, Read, Write};
 
+use prometheus_extractors::file_url_to_path;
 use prometheus_types::{DownloadResult, Error, ProgressEvent, Result, TRANSFER_SIMPLE};
 
 use crate::{TransferBackend, TransferRequest, unique_path};
@@ -25,6 +26,10 @@ impl TransferBackend for SimpleTransfer {
         request: &TransferRequest,
         progress: &mut dyn FnMut(ProgressEvent),
     ) -> Result<DownloadResult> {
+        if request.url.trim().to_ascii_lowercase().starts_with("file:") {
+            return copy_local_file(self.id(), request, progress);
+        }
+
         let path = unique_path(&request.output_dir, &request.filename);
         let resp = ureq::get(&request.url)
             .set("User-Agent", USER_AGENT)
@@ -83,4 +88,47 @@ impl TransferBackend for SimpleTransfer {
 
         Ok(DownloadResult { path: path.to_string_lossy().into_owned(), bytes_written, filename })
     }
+}
+
+fn copy_local_file(
+    transfer_id: &str,
+    request: &TransferRequest,
+    progress: &mut dyn FnMut(ProgressEvent),
+) -> Result<DownloadResult> {
+    let src = file_url_to_path(&request.url)?;
+    let path = unique_path(&request.output_dir, &request.filename);
+    let total_bytes = std::fs::metadata(&src)?.len();
+
+    progress(ProgressEvent::Started {
+        url: request.url.clone(),
+        total_bytes: Some(total_bytes),
+        transfer: transfer_id.to_string(),
+    });
+
+    std::fs::copy(&src, &path)?;
+
+    progress(ProgressEvent::Bytes {
+        url: request.url.clone(),
+        bytes_written: total_bytes,
+        total_bytes: Some(total_bytes),
+        transfer: transfer_id.to_string(),
+    });
+
+    let filename = path
+        .file_name()
+        .map(|s| s.to_string_lossy().into_owned())
+        .unwrap_or_else(|| request.filename.clone());
+
+    progress(ProgressEvent::Finished {
+        url: request.url.clone(),
+        bytes_written: total_bytes,
+        path: path.to_string_lossy().into_owned(),
+        transfer: transfer_id.to_string(),
+    });
+
+    Ok(DownloadResult {
+        path: path.to_string_lossy().into_owned(),
+        bytes_written: total_bytes,
+        filename,
+    })
 }
