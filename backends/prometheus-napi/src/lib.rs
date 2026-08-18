@@ -44,9 +44,8 @@ pub struct JsDownloadResult {
 /// Resolve media metadata for a URL.
 #[napi]
 pub fn info(url: String) -> Result<JsMediaInfo> {
-    let media = Registry::builtin()
-        .inspect(&url)
-        .map_err(|err| Error::from_reason(err.to_string()))?;
+    let media =
+        Registry::builtin().inspect(&url).map_err(|err| Error::from_reason(err.to_string()))?;
     Ok(JsMediaInfo {
         url: media.url,
         title: media.title,

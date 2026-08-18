@@ -1,11 +1,11 @@
 //! Single-connection HTTP(S) downloader.
 
 use std::fs::{self, File};
-use std::io::{copy, BufWriter};
+use std::io::{BufWriter, copy};
 use std::path::{Path, PathBuf};
 
 use prometheus_extractors::Registry;
-use prometheus_types::{sanitize_filename, DownloadResult, Error, Result};
+use prometheus_types::{DownloadResult, Error, Result, sanitize_filename};
 
 /// Download `url` into `output_dir` using the built-in extractor registry.
 pub fn download(url: &str, output_dir: impl AsRef<Path>) -> Result<DownloadResult> {
@@ -14,33 +14,22 @@ pub fn download(url: &str, output_dir: impl AsRef<Path>) -> Result<DownloadResul
 
     let info = Registry::builtin().inspect(url)?;
     let filename = sanitize_filename(
-        info.filename
-            .as_deref()
-            .or(info.title.as_deref())
-            .unwrap_or("download.bin"),
+        info.filename.as_deref().or(info.title.as_deref()).unwrap_or("download.bin"),
     );
     let path = unique_path(output_dir, &filename);
 
-    let resp = ureq::get(url)
-        .call()
-        .map_err(|err| Error::Network(err.to_string()))?;
+    let resp = ureq::get(url).call().map_err(|err| Error::Network(err.to_string()))?;
 
     let mut reader = resp.into_reader();
     let file = File::create(&path)?;
     let mut writer = BufWriter::new(file);
     let bytes_written = copy(&mut reader, &mut writer)?;
-    writer
-        .into_inner()
-        .map_err(|err| Error::Io(err.into_error()))?
-        .sync_all()?;
+    writer.into_inner().map_err(|err| Error::Io(err.into_error()))?.sync_all()?;
 
     Ok(DownloadResult {
         path: path.to_string_lossy().into_owned(),
         bytes_written,
-        filename: path
-            .file_name()
-            .map(|s| s.to_string_lossy().into_owned())
-            .unwrap_or(filename),
+        filename: path.file_name().map(|s| s.to_string_lossy().into_owned()).unwrap_or(filename),
     })
 }
 
@@ -49,10 +38,7 @@ fn unique_path(dir: &Path, filename: &str) -> PathBuf {
     if !candidate.exists() {
         return candidate;
     }
-    let stem = Path::new(filename)
-        .file_stem()
-        .and_then(|s| s.to_str())
-        .unwrap_or("download");
+    let stem = Path::new(filename).file_stem().and_then(|s| s.to_str()).unwrap_or("download");
     let ext = Path::new(filename)
         .extension()
         .and_then(|s| s.to_str())
@@ -106,10 +92,7 @@ mod tests {
     fn downloads_local_fixture() {
         let url = serve_head_and_get(b"hello-prometheus");
         thread::sleep(std::time::Duration::from_millis(20));
-        let nanos = SystemTime::now()
-            .duration_since(UNIX_EPOCH)
-            .unwrap()
-            .as_nanos();
+        let nanos = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_nanos();
         let dir = std::env::temp_dir().join(format!("prometheus-dl-{nanos}"));
         let result = download(&url, &dir).unwrap();
         let bytes = fs::read(&result.path).unwrap();

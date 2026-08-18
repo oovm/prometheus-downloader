@@ -1,7 +1,7 @@
 //! Direct HTTP(S) file URL extractor.
 
 use prometheus_types::{
-    filename_from_url, sanitize_filename, Error, MediaInfo, Result, EXTRACTOR_GENERIC_HTTP,
+    EXTRACTOR_GENERIC_HTTP, Error, MediaInfo, Result, filename_from_url, sanitize_filename,
 };
 
 use crate::Extractor;
@@ -32,9 +32,7 @@ impl Extractor for GenericHttp {
         match ureq::head(url).call() {
             Ok(resp) => {
                 content_type = resp.header("content-type").map(|s| s.to_string());
-                content_length = resp
-                    .header("content-length")
-                    .and_then(|s| s.parse::<u64>().ok());
+                content_length = resp.header("content-length").and_then(|s| s.parse::<u64>().ok());
                 if let Some(raw) = resp.header("content-disposition") {
                     if let Some(name) = filename_from_content_disposition(raw) {
                         filename = Some(name);

@@ -24,9 +24,7 @@ pub struct Registry {
 impl Registry {
     /// Built-in extractors shipped with this crate.
     pub fn builtin() -> Self {
-        Self {
-            extractors: vec![Box::new(GenericHttp)],
-        }
+        Self { extractors: vec![Box::new(GenericHttp)] }
     }
 
     /// Inspect a URL with the first matching extractor.

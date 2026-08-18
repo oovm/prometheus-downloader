@@ -74,11 +74,7 @@ pub fn sanitize_filename(name: &str) -> String {
         }
     }
     let out = out.trim().trim_start_matches('.');
-    if out.is_empty() {
-        "download.bin".to_string()
-    } else {
-        out.to_string()
-    }
+    if out.is_empty() { "download.bin".to_string() } else { out.to_string() }
 }
 
 /// Derive a filename from a URL path segment.
@@ -90,11 +86,7 @@ pub fn filename_from_url(url: &str) -> Option<String> {
     }
     let decoded = percent_decode(segment);
     let name = sanitize_filename(&decoded);
-    if name == "download.bin" {
-        None
-    } else {
-        Some(name)
-    }
+    if name == "download.bin" { None } else { Some(name) }
 }
 
 fn percent_decode(input: &str) -> String {

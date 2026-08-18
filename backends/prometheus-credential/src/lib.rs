@@ -33,15 +33,10 @@ impl Vault {
             }
         }
         if path.exists() {
-            return Err(Error::Credential(format!(
-                "vault already exists: {}",
-                path.display()
-            )));
+            return Err(Error::Credential(format!("vault already exists: {}", path.display())));
         }
         fs::write(path, VAULT_MAGIC)?;
-        Ok(Self {
-            path: path.to_path_buf(),
-        })
+        Ok(Self { path: path.to_path_buf() })
     }
 
     /// Open an existing vault file and verify the magic header.
@@ -49,14 +44,9 @@ impl Vault {
         let path = path.as_ref();
         let bytes = fs::read(path)?;
         if !bytes.starts_with(VAULT_MAGIC) {
-            return Err(Error::Credential(format!(
-                "not a prometheus vault: {}",
-                path.display()
-            )));
+            return Err(Error::Credential(format!("not a prometheus vault: {}", path.display())));
         }
-        Ok(Self {
-            path: path.to_path_buf(),
-        })
+        Ok(Self { path: path.to_path_buf() })
     }
 }
 
@@ -67,10 +57,7 @@ mod tests {
 
     #[test]
     fn create_and_open_empty_vault() {
-        let nanos = SystemTime::now()
-            .duration_since(UNIX_EPOCH)
-            .unwrap()
-            .as_nanos();
+        let nanos = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_nanos();
         let dir = std::env::temp_dir().join(format!("prometheus-vault-{nanos}"));
         fs::create_dir_all(&dir).unwrap();
         let path = dir.join("vault.bin");

@@ -1,0 +1,67 @@
+{
+    "$schema": "https://biomejs.dev/schemas/2.5.7/schema.json",
+    "vcs": {
+        "enabled": true,
+        "clientKind": "git",
+        "useIgnoreFile": true
+    },
+    "formatter": {
+        "enabled": true,
+        "indentStyle": "space",
+        "indentWidth": 4,
+        "lineWidth": 144,
+        "lineEnding": "lf"
+    },
+    "linter": {
+        "enabled": true,
+        "rules": {
+            "preset": "recommended",
+            "style": {
+                "noNonNullAssertion": "off"
+            },
+            "complexity": {
+                "noForEach": "off"
+            },
+            "suspicious": {
+                "noExplicitAny": "off"
+            }
+        }
+    },
+    "javascript": {
+        "formatter": {
+            "quoteStyle": "single",
+            "trailingCommas": "all"
+        }
+    },
+    "json": {
+        "formatter": {
+            "indentWidth": 4
+        }
+    },
+    "overrides": [
+        {
+            "includes": ["*.ts", "*.tsx"],
+            "formatter": {
+                "indentWidth": 4
+            }
+        },
+        {
+            "includes": ["*.vue"],
+            "formatter": {
+                "indentWidth": 2
+            }
+        },
+        {
+            "includes": ["*.json", "*.jsonc"],
+            "formatter": {
+                "indentWidth": 4
+            }
+        },
+        {
+            "includes": ["*.yaml", "*.yml"],
+            "formatter": {
+                "indentWidth": 2
+            }
+        }
+    ]
+}
