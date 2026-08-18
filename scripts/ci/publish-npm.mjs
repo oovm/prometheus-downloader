@@ -218,10 +218,12 @@ function publishNative(version, artifactsRoot) {
         if (!fs.existsSync(path.join(stage, want))) {
             fail(`${name}: staged artifact missing ${want}`);
         }
-        fs.writeFileSync(
-            path.join(stage, 'README.md'),
-            `# ${name}\n\nOptional native binary for \`@doki-land/prometheus\` (${plat.short} / ${plat.triple}).\n`,
-        );
+        const readmeSrc = path.join(ROOT, 'frontends', `prometheus-${plat.short}`, 'README.md');
+        if (fs.existsSync(readmeSrc)) {
+            fs.copyFileSync(readmeSrc, path.join(stage, 'README.md'));
+        } else if (!fs.existsSync(path.join(stage, 'README.md'))) {
+            fail(`${name}: missing README.md (expected ${readmeSrc})`);
+        }
         const outcome = npmPublish(stage, name, version);
         if (outcome === 'published') published += 1;
         else if (outcome === 'exists') {
@@ -326,7 +328,7 @@ function publishJs(version) {
             !fs.existsSync(path.join(stage, 'Readme.md')) &&
             !fs.existsSync(path.join(stage, 'readme.md'))
         ) {
-            fs.writeFileSync(path.join(stage, 'README.md'), `# ${name}\n\nPrometheus package ${version}.\n`);
+            fail(`${name}: package must ship a README.md (npm best practice; no silent stub)`);
         }
 
         const outcome = npmPublish(stage, name, version);

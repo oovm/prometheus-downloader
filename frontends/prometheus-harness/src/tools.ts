@@ -92,7 +92,40 @@ export default plugin;
         files: {
             'package.json': `${JSON.stringify(pkg, null, 4)}\n`,
             'tsconfig.json': `${JSON.stringify(tsconfig, null, 4)}\n`,
-            'README.md': `# @doki-land/prometheus-plugin-${id}\n\nPlugin for ${id}.\n`,
+            'README.md': `# 🔌 @doki-land/prometheus-plugin-${id}
+
+Prometheus plugin (\`${id}\`) for the \`@doki-land/prometheus-plugin\` contract.
+
+## Contract
+
+| Export | Role |
+|--------|------|
+| \`matches(url)\` | Return whether this plugin claims the URL |
+| \`inspect(url, ctx)\` | Return \`MediaInfo\` (use \`ctx.torch\` when platform JS / WASM is required) |
+
+Mark the package:
+
+\`\`\`json
+{ "prometheusPlugin": { "id": "${id}" } }
+\`\`\`
+
+Transfer and disk writes stay in the native \`@doki-land/prometheus-<os>-<cpu>\` addon — this package only resolves metadata.
+
+## Develop
+
+\`\`\`bash
+pnpm --filter @doki-land/prometheus-plugin-${id} build
+npx @doki-land/prometheus-harness test ${id} <url>
+\`\`\`
+
+## Responsible use
+
+Use only with content you have the right to download.
+
+## License
+
+CC0-1.0
+`,
             'src/index.ts': index,
         },
     };
