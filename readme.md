@@ -15,12 +15,12 @@ Most download tooling either dumps everything into one giant script host, or shi
 | Layer | Package / artifact | Job |
 |-------|--------------------|-----|
 | Product entry | `@doki-land/prometheus` | CLI + Node API users actually call |
-| Script / WASM host | `@doki-land/prometheus-torch` | Evaluate platform JavaScript and instantiate WASM **in this Node process** |
+| Script / WASM host | `@doki-land/prometheus-torch` | **Optional upgrade** — platform JS / WASM; not a product dependency |
 | Plugin contract | `@doki-land/prometheus-plugin` | Load `@doki-land/prometheus-plugin-*` modules for inspect / match |
 | Plugin authoring | `@doki-land/prometheus-harness` | MCP + CLI for scaffolding and testing plugins (**no LLM bundled**) |
-| Native engine | `@doki-land/prometheus-<os>-<cpu>` | **One** `.node` file per platform: extractors, transfer, vault hooks |
+| Native engine | `@doki-land/prometheus-<os>-<cpu>` | **One** `.node` file per OS: extractors, transfer, vault hooks |
 
-Transfer, HTTP probing, local `file:` copy, and progress events all run **inside that one `.node`**. Prometheus does not ship a second download CLI, does not spawn PATH tools as the transfer implementation, and does not pack multi-platform binaries into the main JS package.
+Default install is the product package + matching native addon. Torch and real-browser session tools are **upgrade layers** when a host’s protection requires them — not bundled into every install.
 
 ## Status
 

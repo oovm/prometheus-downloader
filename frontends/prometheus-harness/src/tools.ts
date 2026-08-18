@@ -176,7 +176,13 @@ export async function testPlugin(platform: string, url: string) {
     if (!matched) {
         return { success: false, logs, error: 'url did not match plugin' };
     }
-    const torch = new TorchRuntime();
+    /** Harness may supply Torch for plugins that need script/WASM; product package does not. */
+    let torch: InstanceType<typeof TorchRuntime> | undefined;
+    try {
+        torch = new TorchRuntime();
+    } catch (err) {
+        logs.push(`torch unavailable: ${err instanceof Error ? err.message : String(err)}`);
+    }
     const media = await found.plugin.inspect(url, { torch });
     logs.push(`extractor=${media.extractor}`);
     return { success: true, logs, media };

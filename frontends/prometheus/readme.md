@@ -16,9 +16,10 @@ pnpm add @doki-land/prometheus
 - **CLI** (`prometheus`) for version, `info`, and `download`
 - **Typed Node API** wrapping a per-platform **N-API** addon
 - **Optional** platform packages (`@doki-land/prometheus-win32-x64`, `darwin-arm64`, …) pulled in via `optionalDependencies`
-- Bundled thin plugins for direct HTTP(S) and `file:` inspect, plus `@doki-land/prometheus-torch` for platform scripts / WASM
+- Bundled thin plugins for direct HTTP(S) and `file:` inspect (**fallback** only)
+- Native-first `info` (Rust extractors: `generic-http`, `local-file`, `internet-archive`, `wikimedia-commons`, …)
 
-This package is **JavaScript only**. It never embeds every platform’s `.node` binary. On install, npm/pnpm selects the matching `@doki-land/prometheus-<os>-<cpu>` optional dependency. That platform package contains **exactly one** `.node` file — the whole engine lives there.
+This package is **JavaScript only** plus optional platform natives. It does **not** depend on `@doki-land/prometheus-torch`. Install Torch (or a real browser session helper) only when a host requires platform scripts / WASM or stronger session upgrades — see the Torch package README.
 
 ## Requirements
 
@@ -101,8 +102,17 @@ CamelCase wire shape shared with the native engine:
 
 ### How `info` chooses a path
 
-1. Try bundled plugins (`local-file`, then `generic-http`) via Torch context.
-2. Fall back to the native extractor registry inside the addon.
+1. Native extractor registry inside the addon (site coverage + `generic-http` / `local-file`).
+2. If native fails, try bundled JS plugins (**without** loading Torch).
+
+### Optional upgrades (not installed by default)
+
+| Package / tool | When |
+|----------------|------|
+| `@doki-land/prometheus-torch` | A site needs platform JavaScript / WebAssembly in-process |
+| Real browser / Playwright-class tools | Session / RASP fallback (credential surface; later) |
+
+Do **not** expect `pnpm add @doki-land/prometheus` to pull Torch automatically.
 
 Download always goes through the native transfer layer.
 
@@ -125,7 +135,7 @@ set PROMETHEUS_NATIVE_NODE=E:\path\to\prometheus.win32-x64-msvc.node
 
 | Package | When you need it |
 |---------|------------------|
-| [`@doki-land/prometheus-torch`](https://www.npmjs.com/package/@doki-land/prometheus-torch) | Direct access to JS / WASM evaluation (pulled in automatically) |
+| [`@doki-land/prometheus-torch`](https://www.npmjs.com/package/@doki-land/prometheus-torch) | Optional upgrade for platform JS / WASM — **not** a product dependency |
 | [`@doki-land/prometheus-plugin`](https://www.npmjs.com/package/@doki-land/prometheus-plugin) | Authoring plugin types / loading workspace plugins |
 | [`@doki-land/prometheus-harness`](https://www.npmjs.com/package/@doki-land/prometheus-harness) | Scaffold and test plugins from your coding agent |
 | `@doki-land/prometheus-<os>-<cpu>` | Platform binary (usually installed for you) |

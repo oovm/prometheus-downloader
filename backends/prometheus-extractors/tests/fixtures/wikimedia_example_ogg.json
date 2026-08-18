@@ -1,28 +1,28 @@
 {
-  "continue": {
-    "iistart": "2011-09-25T12:17:11Z",
-    "continue": "||"
-  },
-  "query": {
-    "pages": {
-      "2435766": {
-        "pageid": 2435766,
-        "ns": 6,
-        "title": "File:Example.ogg",
-        "imagerepository": "local",
-        "imageinfo": [
-          {
-            "size": 104793,
-            "width": 0,
-            "height": 0,
-            "duration": 6.104036281179138,
-            "url": "https://upload.wikimedia.org/wikipedia/commons/c/c8/Example.ogg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
-            "descriptionurl": "https://commons.wikimedia.org/wiki/File:Example.ogg",
-            "descriptionshorturl": "https://commons.wikimedia.org/w/index.php?curid=2435766",
-            "mime": "application/ogg"
-          }
-        ]
-      }
+    "continue": {
+        "iistart": "2011-09-25T12:17:11Z",
+        "continue": "||"
+    },
+    "query": {
+        "pages": {
+            "2435766": {
+                "pageid": 2435766,
+                "ns": 6,
+                "title": "File:Example.ogg",
+                "imagerepository": "local",
+                "imageinfo": [
+                    {
+                        "size": 104793,
+                        "width": 0,
+                        "height": 0,
+                        "duration": 6.104036281179138,
+                        "url": "https://upload.wikimedia.org/wikipedia/commons/c/c8/Example.ogg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+                        "descriptionurl": "https://commons.wikimedia.org/wiki/File:Example.ogg",
+                        "descriptionshorturl": "https://commons.wikimedia.org/w/index.php?curid=2435766",
+                        "mime": "application/ogg"
+                    }
+                ]
+            }
+        }
     }
-  }
 }

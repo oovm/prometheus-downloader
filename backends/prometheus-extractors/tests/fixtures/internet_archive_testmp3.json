@@ -1,180 +1,174 @@
 {
-  "alternate_locations": {
-    "servers": [
-      {
-        "server": "dn710807.ca.archive.org",
-        "dir": "/0/items/testmp3testfile"
-      }
+    "alternate_locations": {
+        "servers": [
+            {
+                "server": "dn710807.ca.archive.org",
+                "dir": "/0/items/testmp3testfile"
+            }
+        ],
+        "workable": [
+            {
+                "server": "dn710807.ca.archive.org",
+                "dir": "/0/items/testmp3testfile"
+            }
+        ]
+    },
+    "created": 1787024706,
+    "d1": "ia600908.us.archive.org",
+    "d2": "ia800908.us.archive.org",
+    "dir": "/8/items/testmp3testfile",
+    "files": [
+        {
+            "name": "__ia_thumb.jpg",
+            "source": "original",
+            "mtime": "1613725050",
+            "size": "2850",
+            "md5": "b99490455f9dd1fdf0014997f43343a5",
+            "crc32": "ea2c52e8",
+            "sha1": "3584a3fb939b19beb772a1ecc93533dc5985de2a",
+            "format": "Item Tile",
+            "rotation": "0"
+        },
+        {
+            "name": "mpthreetest.mp3",
+            "source": "original",
+            "license": ". Licensed to the public under http://www.copyright.gov/ verify at http://www.archive.org/details/testmp3testfile",
+            "creator": "test",
+            "spinxpress_identifier": "3c6e91fb1876e38589b97ffd9bc1da0dc42faf17",
+            "spinxpress_groupname": "Test Uploads",
+            "format": "64Kbps MP3",
+            "md5": "eebc1b05345cffe3cf7a80b15f6251f6",
+            "mtime": "1160668837",
+            "size": "198658",
+            "crc32": "c4f6ad23",
+            "sha1": "86fbed776fb46e1534e2210078bb1387aa45a938",
+            "length": "12.42",
+            "height": "0",
+            "width": "0",
+            "title": "Test of MP3 File",
+            "artist": "Me",
+            "album": "Me",
+            "comment": "test",
+            "track": "1",
+            "genre": "Other"
+        },
+        {
+            "name": "mpthreetest.ogg",
+            "source": "derivative",
+            "format": "Ogg Vorbis",
+            "original": "mpthreetest.mp3",
+            "mtime": "1415217362",
+            "size": "113206",
+            "md5": "6a2484b9bd1658742a80128366e40b84",
+            "crc32": "f699358f",
+            "sha1": "54a4fb209c016728a44b19895e70814435646da2",
+            "length": "12.41",
+            "height": "0",
+            "width": "0"
+        },
+        {
+            "name": "mpthreetest.png",
+            "source": "derivative",
+            "format": "PNG",
+            "original": "mpthreetest.ogg",
+            "mtime": "1415217372",
+            "size": "9748",
+            "md5": "4282d7e7cb4f35bc023b73dc5e36db59",
+            "crc32": "0adbe6d1",
+            "sha1": "4c052a2316e23486620f58e9526ded01651ff606"
+        },
+        {
+            "name": "testmp3testfile_64kb.m3u",
+            "source": "derivative",
+            "format": "64Kbps M3U",
+            "original": "mpthreetest.mp3",
+            "md5": "afad2a3e2bbf23585db3393697ae83ea",
+            "mtime": "1160668856",
+            "size": "64",
+            "crc32": "e7ebc2ec",
+            "sha1": "09af82ae9dedf7c3e238aa6277e60a991584a0dc"
+        },
+        {
+            "name": "testmp3testfile_64kb_mp3.zip",
+            "source": "derivative",
+            "format": "64Kbps MP3 ZIP",
+            "original": "mpthreetest.mp3",
+            "md5": "57625c15e948f7c17d549cca1d414829",
+            "mtime": "1160668856",
+            "size": "198820",
+            "crc32": "e1794f8c",
+            "sha1": "a5391572a776244516a675db21ba31353fe13387",
+            "length": "12.43",
+            "height": "0",
+            "width": "0",
+            "filecount": "1"
+        },
+        {
+            "name": "testmp3testfile_archive.torrent",
+            "source": "metadata",
+            "btih": "65f23450f20af99168adbb471d465c763c03a421",
+            "mtime": "1613725051",
+            "size": "2143",
+            "md5": "db8cf73d9cfc287712fd81ba99d5d175",
+            "crc32": "7b122f99",
+            "sha1": "a5211d96213a55856311513b351b2f8bd748b06a",
+            "format": "Archive BitTorrent"
+        },
+        {
+            "name": "testmp3testfile_files.xml",
+            "source": "original",
+            "md5": "6e70c35af46ecdc2a65fbf0871244165",
+            "format": "Metadata",
+            "summation": "md5"
+        },
+        {
+            "name": "testmp3testfile_meta.xml",
+            "source": "original",
+            "mtime": "1613725050",
+            "size": "1042",
+            "format": "Metadata",
+            "md5": "831a9956f1f11a2b353b79f50d3df4a6",
+            "crc32": "299c7534",
+            "sha1": "87329b3d40c03ec90f2d35f063ca10de715e477d"
+        },
+        {
+            "name": "testmp3testfile_reviews.xml",
+            "source": "original",
+            "md5": "83eafeb784a0785e50707f44639d93c9",
+            "mtime": "1160668817",
+            "size": "179",
+            "crc32": "ba2850bb",
+            "sha1": "a36efb6cee375bc3b302a0dfc240a77048f4d9bb",
+            "format": "Metadata"
+        }
     ],
-    "workable": [
-      {
-        "server": "dn710807.ca.archive.org",
-        "dir": "/0/items/testmp3testfile"
-      }
-    ]
-  },
-  "created": 1787024706,
-  "d1": "ia600908.us.archive.org",
-  "d2": "ia800908.us.archive.org",
-  "dir": "/8/items/testmp3testfile",
-  "files": [
-    {
-      "name": "__ia_thumb.jpg",
-      "source": "original",
-      "mtime": "1613725050",
-      "size": "2850",
-      "md5": "b99490455f9dd1fdf0014997f43343a5",
-      "crc32": "ea2c52e8",
-      "sha1": "3584a3fb939b19beb772a1ecc93533dc5985de2a",
-      "format": "Item Tile",
-      "rotation": "0"
+    "files_count": 10,
+    "item_last_updated": 1711162545,
+    "item_size": 526710,
+    "metadata": {
+        "mediatype": "audio",
+        "is_clip": "false",
+        "uploader": "balduzzi@atlanticbb.net",
+        "licenseurl": "http://www.copyright.gov/",
+        "audio_type": "Spoken Word(interviews, reading, etc)",
+        "title": "mp3 test file",
+        "adder": "balduzzi@atlanticbb.net",
+        "video_type": "Home video/Real-life video",
+        "other_copyright_holders": "false",
+        "monochromatic": "false",
+        "mature_content": "false",
+        "creator": "test",
+        "description": "test of an mp3 file upload",
+        "subject": "test",
+        "collection": ["ourmedia", "community"],
+        "publicdate": "2006-10-12 09:01:06",
+        "identifier": "testmp3testfile",
+        "curation": "[curator]malware@archive.org[/curator][date]20140318060008[/date][comment]checked for malware[/comment]",
+        "backup_location": "ia903600_23",
+        "addeddate": "2006-10-12 09:01:06"
     },
-    {
-      "name": "mpthreetest.mp3",
-      "source": "original",
-      "license": ". Licensed to the public under http://www.copyright.gov/ verify at http://www.archive.org/details/testmp3testfile",
-      "creator": "test",
-      "spinxpress_identifier": "3c6e91fb1876e38589b97ffd9bc1da0dc42faf17",
-      "spinxpress_groupname": "Test Uploads",
-      "format": "64Kbps MP3",
-      "md5": "eebc1b05345cffe3cf7a80b15f6251f6",
-      "mtime": "1160668837",
-      "size": "198658",
-      "crc32": "c4f6ad23",
-      "sha1": "86fbed776fb46e1534e2210078bb1387aa45a938",
-      "length": "12.42",
-      "height": "0",
-      "width": "0",
-      "title": "Test of MP3 File",
-      "artist": "Me",
-      "album": "Me",
-      "comment": "test",
-      "track": "1",
-      "genre": "Other"
-    },
-    {
-      "name": "mpthreetest.ogg",
-      "source": "derivative",
-      "format": "Ogg Vorbis",
-      "original": "mpthreetest.mp3",
-      "mtime": "1415217362",
-      "size": "113206",
-      "md5": "6a2484b9bd1658742a80128366e40b84",
-      "crc32": "f699358f",
-      "sha1": "54a4fb209c016728a44b19895e70814435646da2",
-      "length": "12.41",
-      "height": "0",
-      "width": "0"
-    },
-    {
-      "name": "mpthreetest.png",
-      "source": "derivative",
-      "format": "PNG",
-      "original": "mpthreetest.ogg",
-      "mtime": "1415217372",
-      "size": "9748",
-      "md5": "4282d7e7cb4f35bc023b73dc5e36db59",
-      "crc32": "0adbe6d1",
-      "sha1": "4c052a2316e23486620f58e9526ded01651ff606"
-    },
-    {
-      "name": "testmp3testfile_64kb.m3u",
-      "source": "derivative",
-      "format": "64Kbps M3U",
-      "original": "mpthreetest.mp3",
-      "md5": "afad2a3e2bbf23585db3393697ae83ea",
-      "mtime": "1160668856",
-      "size": "64",
-      "crc32": "e7ebc2ec",
-      "sha1": "09af82ae9dedf7c3e238aa6277e60a991584a0dc"
-    },
-    {
-      "name": "testmp3testfile_64kb_mp3.zip",
-      "source": "derivative",
-      "format": "64Kbps MP3 ZIP",
-      "original": "mpthreetest.mp3",
-      "md5": "57625c15e948f7c17d549cca1d414829",
-      "mtime": "1160668856",
-      "size": "198820",
-      "crc32": "e1794f8c",
-      "sha1": "a5391572a776244516a675db21ba31353fe13387",
-      "length": "12.43",
-      "height": "0",
-      "width": "0",
-      "filecount": "1"
-    },
-    {
-      "name": "testmp3testfile_archive.torrent",
-      "source": "metadata",
-      "btih": "65f23450f20af99168adbb471d465c763c03a421",
-      "mtime": "1613725051",
-      "size": "2143",
-      "md5": "db8cf73d9cfc287712fd81ba99d5d175",
-      "crc32": "7b122f99",
-      "sha1": "a5211d96213a55856311513b351b2f8bd748b06a",
-      "format": "Archive BitTorrent"
-    },
-    {
-      "name": "testmp3testfile_files.xml",
-      "source": "original",
-      "md5": "6e70c35af46ecdc2a65fbf0871244165",
-      "format": "Metadata",
-      "summation": "md5"
-    },
-    {
-      "name": "testmp3testfile_meta.xml",
-      "source": "original",
-      "mtime": "1613725050",
-      "size": "1042",
-      "format": "Metadata",
-      "md5": "831a9956f1f11a2b353b79f50d3df4a6",
-      "crc32": "299c7534",
-      "sha1": "87329b3d40c03ec90f2d35f063ca10de715e477d"
-    },
-    {
-      "name": "testmp3testfile_reviews.xml",
-      "source": "original",
-      "md5": "83eafeb784a0785e50707f44639d93c9",
-      "mtime": "1160668817",
-      "size": "179",
-      "crc32": "ba2850bb",
-      "sha1": "a36efb6cee375bc3b302a0dfc240a77048f4d9bb",
-      "format": "Metadata"
-    }
-  ],
-  "files_count": 10,
-  "item_last_updated": 1711162545,
-  "item_size": 526710,
-  "metadata": {
-    "mediatype": "audio",
-    "is_clip": "false",
-    "uploader": "balduzzi@atlanticbb.net",
-    "licenseurl": "http://www.copyright.gov/",
-    "audio_type": "Spoken Word(interviews, reading, etc)",
-    "title": "mp3 test file",
-    "adder": "balduzzi@atlanticbb.net",
-    "video_type": "Home video/Real-life video",
-    "other_copyright_holders": "false",
-    "monochromatic": "false",
-    "mature_content": "false",
-    "creator": "test",
-    "description": "test of an mp3 file upload",
-    "subject": "test",
-    "collection": [
-      "ourmedia",
-      "community"
-    ],
-    "publicdate": "2006-10-12 09:01:06",
-    "identifier": "testmp3testfile",
-    "curation": "[curator]malware@archive.org[/curator][date]20140318060008[/date][comment]checked for malware[/comment]",
-    "backup_location": "ia903600_23",
-    "addeddate": "2006-10-12 09:01:06"
-  },
-  "reviews": [],
-  "server": "ia800908.us.archive.org",
-  "uniq": 398280707,
-  "workable_servers": [
-    "ia800908.us.archive.org",
-    "ia600908.us.archive.org"
-  ]
+    "reviews": [],
+    "server": "ia800908.us.archive.org",
+    "uniq": 398280707,
+    "workable_servers": ["ia800908.us.archive.org", "ia600908.us.archive.org"]
 }

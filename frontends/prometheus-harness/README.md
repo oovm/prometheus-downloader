@@ -1,6 +1,8 @@
 # 🛠️ @doki-land/prometheus-harness
 
-**Harness** is the authoring toolkit for Prometheus plugins. It exposes the same capabilities as a small CLI and as an **MCP stdio server** so your coding agent (Cursor, Claude Desktop, and similar) can list, scaffold, and test `@doki-land/prometheus-plugin-*` packages.
+**Harness** is the authoring toolkit for Prometheus plugins. It exposes the same capabilities as a small CLI and as an **MCP stdio server** so your coding agent can list, scaffold, and test `@doki-land/prometheus-plugin-*` packages.
+
+Harness may depend on `@doki-land/prometheus-torch` so authors can exercise script-oriented plugins. That does **not** mean the product package `@doki-land/prometheus` installs Torch by default.
 
 Harness **does not** embed a language model. Your assistant stays on your side of the MCP socket; this package only provides tools.
 

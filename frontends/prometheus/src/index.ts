@@ -21,15 +21,19 @@ function fromNativeInfo(url: string): MediaInfo {
     };
 }
 
-/** Resolve media metadata for a URL. Tries plugins, then the native engine. */
+/** Resolve media metadata for a URL. Native extractors first; JS plugins as fallback. */
 export async function info(url: string): Promise<MediaInfo> {
     try {
-        const fromPlugin = await inspectWithPlugins(url);
-        if (fromPlugin) return fromPlugin;
-    } catch {
-        /* native fallback */
+        return fromNativeInfo(url);
+    } catch (nativeErr) {
+        try {
+            const fromPlugin = await inspectWithPlugins(url);
+            if (fromPlugin) return fromPlugin;
+        } catch {
+            /* keep native error */
+        }
+        throw nativeErr;
     }
-    return fromNativeInfo(url);
 }
 
 /** Download a URL into `outputDir`. */

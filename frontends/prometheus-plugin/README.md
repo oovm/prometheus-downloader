@@ -10,7 +10,7 @@ Transfer, Range downloads, and file IO stay in the **native** addon. Plugins do 
 pnpm add @doki-land/prometheus-plugin
 ```
 
-Authors usually also depend on `@doki-land/prometheus-torch` (or receive `torch` through `PluginContext` from the product / harness).
+Authors may optionally depend on `@doki-land/prometheus-torch` when a plugin must run platform scripts. The product package does **not** install Torch by default; `PluginContext.torch` is optional.
 
 Requires **Node.js ≥ 20**.
 
@@ -29,7 +29,8 @@ export type MediaInfo = {
 };
 
 export type PluginContext = {
-  torch: {
+  /** Optional — only when Torch (or a compatible host) is installed. */
+  torch?: {
     evaluateJavascript: (source: string, options?: Record<string, unknown>) => unknown;
     instantiateWasm: (
       bytes: BufferSource,

@@ -29,9 +29,6 @@ importers:
       '@doki-land/prometheus-plugin-local-file':
         specifier: workspace:*
         version: link:../prometheus-plugin-local-file
-      '@doki-land/prometheus-torch':
-        specifier: workspace:*
-        version: link:../prometheus-torch
       commander:
         specifier: ^13.1.0
         version: 13.1.0

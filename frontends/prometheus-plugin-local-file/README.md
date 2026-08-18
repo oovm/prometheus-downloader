@@ -40,14 +40,13 @@ Throws if the path is missing or not a file. `ctx.torch` is unused.
 ```ts
 import { pathToFileURL } from 'node:url';
 import plugin from '@doki-land/prometheus-plugin-local-file';
-import { TorchRuntime } from '@doki-land/prometheus-torch';
 
 const url = pathToFileURL('/tmp/clip.bin').href;
 plugin.matches(url); // true
 
-const media = await plugin.inspect(url, { torch: new TorchRuntime() });
+const media = await plugin.inspect(url, {});
 // media.extractor === 'local-file'
-// media.contentLength === file size
+// ctx.torch is optional; this thin plugin does not need it
 ```
 
 Product package (plugin runs before native fallback):

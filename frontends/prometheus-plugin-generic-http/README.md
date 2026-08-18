@@ -35,14 +35,12 @@ If `HEAD` fails, inspect still returns URL-derived metadata when possible (the *
 
 ```ts
 import plugin from '@doki-land/prometheus-plugin-generic-http';
-import { TorchRuntime } from '@doki-land/prometheus-torch';
 
 plugin.matches('https://cdn.example.com/a.bin'); // true
 
-const media = await plugin.inspect('https://cdn.example.com/a.bin', {
-  torch: new TorchRuntime(),
-});
+const media = await plugin.inspect('https://cdn.example.com/a.bin', {});
 // media.extractor === 'generic-http'
+// ctx.torch is optional; this thin plugin does not need it
 ```
 
 From the product package:

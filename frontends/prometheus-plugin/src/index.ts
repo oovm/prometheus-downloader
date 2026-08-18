@@ -14,7 +14,8 @@ export type MediaInfo = {
 };
 
 export type PluginContext = {
-    torch: {
+    /** Present only when `@doki-land/prometheus-torch` (or a compatible host) is installed. */
+    torch?: {
         evaluateJavascript: (source: string, options?: Record<string, unknown>) => unknown;
         instantiateWasm: (bytes: BufferSource, imports?: WebAssembly.Imports) => Promise<WebAssembly.WebAssemblyInstantiatedSource>;
     };
