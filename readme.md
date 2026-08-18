@@ -31,7 +31,7 @@ What works today on the happy path:
 
 - `prometheus --version`
 - `info` / `download` for direct HTTP(S) file URLs (native engine)
-- `info` for Internet Archive, Wikimedia / Wikipedia `File:`, PeerTube, NASA Images, selected museums, Openverse, Gutenberg, ccMixter, V&A, Open Library, and Wellcome Collection (native extractors)
+- `info` for Internet Archive, Wikimedia / Wikipedia `File:`, PeerTube, NASA Images, selected museums, Openverse, Gutenberg, ccMixter, V&A, Open Library, Wellcome Collection, and NetEase Cloud Music song pages when a public free direct media URL is available (native extractors)
 - `downloadWithEvents` for structured progress (`started` / `bytes` / `finished` / `failed`)
 - `file:` metadata via the bundled local-file plugin (and native extractor fallback)
 - Torch `evaluateJavascript` / `instantiateWasm`

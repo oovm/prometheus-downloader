@@ -22,9 +22,10 @@ Not published to crates.io. Consumed by `prometheus-downloader` and exposed to J
 | `vam` | `Vam` | `collections.vam.ac.uk/item/O…` | Object API IIIF `full/max` JPEG |
 | `open-library` | `OpenLibrary` | `openlibrary.org/works/OL…W` / `/books/OL…M` | Cover CDN `covers.openlibrary.org/b/id/{id}-L.jpg` |
 | `wellcome` | `Wellcome` | `wellcomecollection.org/works/…` (and image / IIIF URLs) | Catalogue API → IIIF `full/max` JPEG |
+| `netease-cloud` | `NeteaseCloud` | `music.163.com/song?id=…` (and common `#/` / `m/` variants) | Public detail + player APIs → free (`fee=0`) direct media URL |
 | `generic-http` | `GenericHttp` | `http://` / `https://` | HEAD → Range → GET header probe; User-Agent `Prometheus/<version>` |
 
-Registry order: **local-file → internet-archive → wikimedia-commons → peertube → nasa-images → met-museum → artic → cleveland-museum → openverse → gutenberg → ccmixter → vam → open-library → wellcome → generic-http**.
+Registry order: **local-file → internet-archive → wikimedia-commons → peertube → nasa-images → met-museum → artic → cleveland-museum → openverse → gutenberg → ccmixter → vam → open-library → wellcome → netease-cloud → generic-http**.
 
 ```rust
 use prometheus_extractors::Registry;

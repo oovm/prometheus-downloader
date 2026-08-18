@@ -11,6 +11,7 @@ mod internet_archive;
 mod local_file;
 mod met_museum;
 mod nasa_images;
+mod netease_cloud;
 mod open_library;
 mod openverse;
 mod peertube;
@@ -40,6 +41,10 @@ pub use met_museum::{
     MetMuseum, media_from_object_json as media_from_met_json, object_id as met_object_id,
 };
 pub use nasa_images::{NasaImages, media_from_asset_json as media_from_nasa_json, nasa_id};
+pub use netease_cloud::{
+    NeteaseCloud, media_from_detail_and_player_json as media_from_netease_json,
+    song_id as netease_song_id,
+};
 pub use open_library::{
     OpenLibrary, ResourceKind as OpenLibraryResourceKind, library_target as open_library_target,
     media_from_library_json as media_from_open_library_json,
@@ -94,6 +99,7 @@ impl Registry {
                 Box::new(Vam),
                 Box::new(OpenLibrary),
                 Box::new(Wellcome),
+                Box::new(NeteaseCloud),
                 Box::new(GenericHttp),
             ],
         }

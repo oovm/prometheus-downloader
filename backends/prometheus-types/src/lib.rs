@@ -53,6 +53,9 @@ pub const EXTRACTOR_OPEN_LIBRARY: &str = "open-library";
 /// Extractor id for Wellcome Collection works / images.
 pub const EXTRACTOR_WELLCOME: &str = "wellcome";
 
+/// Extractor id for NetEase Cloud Music song pages (public free tracks).
+pub const EXTRACTOR_NETEASE_CLOUD: &str = "netease-cloud";
+
 /// Transfer backend id for the in-process single-connection HTTP client.
 pub const TRANSFER_SIMPLE: &str = "simple";
 

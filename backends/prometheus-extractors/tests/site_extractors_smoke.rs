@@ -3,16 +3,16 @@ use std::path::PathBuf;
 
 use prometheus_extractors::{
     Artic, CcMixter, ClevelandArtworkRef, ClevelandMuseum, Extractor, Gutenberg, InternetArchive,
-    MetMuseum, NasaImages, OpenLibrary, OpenLibraryResourceKind, Openverse, OpenverseWorkKind,
-    PeerTube, Vam, Wellcome, WellcomeTarget, WikimediaCommons, artic_artwork_id,
+    MetMuseum, NasaImages, NeteaseCloud, OpenLibrary, OpenLibraryResourceKind, Openverse,
+    OpenverseWorkKind, PeerTube, Vam, Wellcome, WellcomeTarget, WikimediaCommons, artic_artwork_id,
     ccmixter_upload_id, cleveland_artwork_ref, gutenberg_ebook_id, internet_archive_item_id,
     media_from_api_json, media_from_artic_json, media_from_ccmixter_json,
     media_from_cleveland_json, media_from_gutenberg_json, media_from_met_json,
-    media_from_metadata_json, media_from_nasa_json, media_from_open_library_json,
-    media_from_openverse_json, media_from_vam_json, media_from_video_json,
-    media_from_wellcome_image_json, met_object_id, nasa_id, open_library_target,
-    openverse_work_target, peertube_watch_target, vam_object_id, wellcome_target,
-    wikimedia_file_title,
+    media_from_metadata_json, media_from_nasa_json, media_from_netease_json,
+    media_from_open_library_json, media_from_openverse_json, media_from_vam_json,
+    media_from_video_json, media_from_wellcome_image_json, met_object_id, nasa_id, netease_song_id,
+    open_library_target, openverse_work_target, peertube_watch_target, vam_object_id,
+    wellcome_target, wikimedia_file_title,
 };
 
 fn fixture(name: &str) -> String {
@@ -540,5 +540,61 @@ fn live_wellcome_inspect_optional() {
             assert!(info.url.contains("iiif.wellcomecollection.org"));
         }
         Err(err) => eprintln!("skip live wellcome ({err})"),
+    }
+}
+
+#[test]
+fn parses_netease_song_id() {
+    assert_eq!(netease_song_id("https://music.163.com/song?id=415749").as_deref(), Some("415749"));
+    assert_eq!(
+        netease_song_id("https://music.163.com/#/song?id=415749").as_deref(),
+        Some("415749")
+    );
+    assert_eq!(
+        netease_song_id("https://music.163.com/m/song?id=415749").as_deref(),
+        Some("415749")
+    );
+    assert_eq!(
+        netease_song_id("https://y.music.163.com/m/song?app_version=8.8.45&id=95670&uct2=abc")
+            .as_deref(),
+        Some("95670")
+    );
+    assert!(NeteaseCloud.matches("https://music.163.com/#m/song?id=415749"));
+    assert!(!NeteaseCloud.matches("https://music.163.com/playlist?id=1"));
+    assert!(!NeteaseCloud.matches("https://music.163.com/song/media/outer/url?id=415749.mp3"));
+}
+
+#[test]
+fn media_from_netease_fixture() {
+    let detail = fixture("netease_415749_detail.json");
+    let player = fixture("netease_415749_player.json");
+    let info = media_from_netease_json(&detail, &player).unwrap();
+    assert_eq!(info.extractor, "netease-cloud");
+    assert_eq!(info.title.as_deref(), Some("\u{201c}Libera me\u{201d} from hell"));
+    assert_eq!(info.url, "https://m10.music.126.net/fixture/ee86f5efae60c0ee6b324f85d7a8cec7.mp3");
+    assert_eq!(info.content_type.as_deref(), Some("audio/mpeg"));
+    assert_eq!(info.content_length, Some(4_621_835));
+}
+
+#[test]
+fn media_from_netease_rejects_membership() {
+    let detail = fixture("netease_vip_detail.json");
+    let player = fixture("netease_vip_player.json");
+    let err = media_from_netease_json(&detail, &player).unwrap_err();
+    let msg = err.to_string();
+    assert!(msg.contains("no public free download URL"), "{msg}");
+}
+
+#[test]
+fn live_netease_inspect_optional() {
+    if std::env::var_os("PROMETHEUS_LIVE_NET").is_none() {
+        return;
+    }
+    match NeteaseCloud.inspect("https://music.163.com/song?id=415749") {
+        Ok(info) => {
+            assert_eq!(info.extractor, "netease-cloud");
+            assert!(info.url.contains("music.126.net") || info.url.contains(".mp3"));
+        }
+        Err(err) => eprintln!("skip live netease-cloud ({err})"),
     }
 }

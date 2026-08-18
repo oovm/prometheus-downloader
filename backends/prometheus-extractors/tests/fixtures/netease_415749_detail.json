@@ -1,0 +1,22 @@
+{
+    "songs": [
+        {
+            "name": "“Libera me” from hell",
+            "id": 415749,
+            "fee": 0,
+            "duration": 288800,
+            "artists": [
+                {
+                    "name": "岩崎琢"
+                },
+                {
+                    "name": "新南田ゆり"
+                },
+                {
+                    "name": "Tarantula"
+                }
+            ]
+        }
+    ],
+    "code": 200
+}

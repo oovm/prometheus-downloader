@@ -1,0 +1,16 @@
+{
+    "songs": [
+        {
+            "name": "VIP Only Demo",
+            "id": 999001,
+            "fee": 1,
+            "duration": 180000,
+            "artists": [
+                {
+                    "name": "Demo"
+                }
+            ]
+        }
+    ],
+    "code": 200
+}

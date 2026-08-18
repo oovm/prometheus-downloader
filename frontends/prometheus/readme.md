@@ -17,7 +17,7 @@ pnpm add @doki-land/prometheus
 - **Typed Node API** wrapping a per-platform **N-API** addon
 - **Optional** platform packages (`@doki-land/prometheus-win32-x64`, `darwin-arm64`, …) pulled in via `optionalDependencies`
 - Bundled thin plugins for direct HTTP(S) and `file:` inspect (**fallback** only)
-- Native-first `info` (Rust extractors: `generic-http`, `local-file`, `internet-archive`, `wikimedia-commons`, `peertube`, `nasa-images`, `met-museum`, `artic`, `cleveland-museum`, `openverse`, `gutenberg`, `ccmixter`, `vam`, `open-library`, `wellcome`, …)
+- Native-first `info` (Rust extractors: `generic-http`, `local-file`, `internet-archive`, `wikimedia-commons`, `peertube`, `nasa-images`, `met-museum`, `artic`, `cleveland-museum`, `openverse`, `gutenberg`, `ccmixter`, `vam`, `open-library`, `wellcome`, `netease-cloud`, …)
 
 This package is **JavaScript only** plus optional platform natives. It does **not** depend on `@doki-land/prometheus-torch`. Install Torch (or a real browser session helper) only when a host requires platform scripts / WASM or stronger session upgrades — see the Torch package README.
 
