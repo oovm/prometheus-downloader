@@ -1,4 +1,4 @@
-# 🧭 prometheus-extractors
+# prometheus-extractors
 
 **URL extractors** and the ordered registry used by Prometheus. An extractor answers `matches(url)` and `inspect(url) -> MediaInfo`. The first matching extractor in the registry wins.
 
@@ -8,18 +8,18 @@ Not published to crates.io. Consumed by `prometheus-downloader` and exposed to J
 
 | Id | Struct | Matches | Notes |
 |----|--------|---------|-------|
-| `generic-http` | `GenericHttp` | `http://` / `https://` | Probes metadata with `HEAD` → `Range: bytes=0-0` → GET headers; User-Agent `Prometheus/<version>` |
-| `local-file` | `LocalFile` | `file:` | Local filesystem `stat`; path parsing for Windows and POSIX `file:` forms |
+| `local-file` | `LocalFile` | `file:` | Local filesystem `stat` |
+| `internet-archive` | `InternetArchive` | `archive.org/details/…` (also `/download/` / `/metadata/`) | Public metadata API → chooses a downloadable media file |
+| `wikimedia-commons` | `WikimediaCommons` | `commons.wikimedia.org/wiki/File:…` | MediaWiki `imageinfo` API → `upload.wikimedia.org` URL |
+| `generic-http` | `GenericHttp` | `http://` / `https://` | HEAD → Range → GET header probe; User-Agent `Prometheus/<version>` |
 
-Registry construction:
+Registry order: **local-file → internet-archive → wikimedia-commons → generic-http**.
 
 ```rust
 use prometheus_extractors::Registry;
 
 let media = Registry::builtin().inspect(url)?;
 ```
-
-Order: **`local-file` then `generic-http`**, so `file:` never falls through to HTTP.
 
 ## Contract
 
@@ -31,16 +31,13 @@ pub trait Extractor: Send + Sync {
 }
 ```
 
-Helpers re-exported for tests and callers:
+**Tool coverage means more media sites / hosts**, added here—not by stacking npm plugins. Transfer backends are a separate axis.
 
-- `filename_from_content_disposition`
-- `file_url_to_path`
+Helpers: `filename_from_content_disposition`, `file_url_to_path`, `media_from_metadata_json`, `media_from_api_json`.
 
-## Design notes
+## Tests
 
-- Extractors resolve **metadata**, not bytes. Transfer belongs in `prometheus-downloader`.
-- Site-specific adapters should stay focused: return honest `MediaInfo` (and later request parameters). **Coverage means more media sites / hosts**, added here—not by stacking npm plugins.
-- npm `@doki-land/prometheus-plugin-*` packages mirror a subset of this surface for Harness verification; the engine registry remains authoritative for native `info` / `download`.
+Fixture-based parsing tests ship under `tests/fixtures/`. Optional live network checks run only when `PROMETHEUS_LIVE_NET=1` and soft-skip on transport errors.
 
 ## License
 

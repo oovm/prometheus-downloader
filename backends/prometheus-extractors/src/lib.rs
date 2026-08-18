@@ -3,10 +3,18 @@
 #![deny(missing_docs)]
 
 mod generic_http;
+mod internet_archive;
 mod local_file;
+mod wikimedia_commons;
 
 pub use generic_http::{GenericHttp, filename_from_content_disposition};
+pub use internet_archive::{
+    InternetArchive, item_id as internet_archive_item_id, media_from_metadata_json,
+};
 pub use local_file::{LocalFile, file_url_to_path};
+pub use wikimedia_commons::{
+    WikimediaCommons, file_title as wikimedia_file_title, media_from_api_json,
+};
 
 use prometheus_types::{Error, MediaInfo, Result};
 
@@ -28,7 +36,14 @@ pub struct Registry {
 impl Registry {
     /// Built-in extractors shipped with this crate.
     pub fn builtin() -> Self {
-        Self { extractors: vec![Box::new(LocalFile), Box::new(GenericHttp)] }
+        Self {
+            extractors: vec![
+                Box::new(LocalFile),
+                Box::new(InternetArchive),
+                Box::new(WikimediaCommons),
+                Box::new(GenericHttp),
+            ],
+        }
     }
 
     /// Inspect a URL with the first matching extractor.

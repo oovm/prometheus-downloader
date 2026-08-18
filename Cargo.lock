@@ -470,6 +470,8 @@ name = "prometheus-extractors"
 version = "0.0.1"
 dependencies = [
  "prometheus-types",
+ "serde",
+ "serde_json",
  "ureq",
 ]
 

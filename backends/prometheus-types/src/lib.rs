@@ -14,6 +14,12 @@ pub const EXTRACTOR_GENERIC_HTTP: &str = "generic-http";
 /// Extractor id for local `file:` URLs.
 pub const EXTRACTOR_LOCAL_FILE: &str = "local-file";
 
+/// Extractor id for Internet Archive item pages (`archive.org/details/…`).
+pub const EXTRACTOR_INTERNET_ARCHIVE: &str = "internet-archive";
+
+/// Extractor id for Wikimedia Commons file pages.
+pub const EXTRACTOR_WIKIMEDIA_COMMONS: &str = "wikimedia-commons";
+
 /// Transfer backend id for the in-process single-connection HTTP client.
 pub const TRANSFER_SIMPLE: &str = "simple";
 

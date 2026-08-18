@@ -30,12 +30,13 @@ What works today on the happy path:
 
 - `prometheus --version`
 - `info` / `download` for direct HTTP(S) file URLs (native engine)
+- `info` for Internet Archive item pages and Wikimedia Commons `File:` pages (native extractors)
 - `downloadWithEvents` for structured progress (`started` / `bytes` / `finished` / `failed`)
 - `file:` metadata via the bundled local-file plugin (and native extractor fallback)
 - Torch `evaluateJavascript` / `instantiateWasm`
 - Harness plugin list / create / test / fetch helpers
 
-What is intentionally thin or stubbed: product MCP server, multi-connection Range transfer, real vault encryption, and **broad media-site coverage** (more hosts still to land in Rust extractors).
+What is intentionally thin or stubbed: product MCP server, multi-connection Range transfer, real vault encryption, and **broad media-site coverage** beyond the extractors above (more hosts still to land in Rust).
 
 ## Quick start (after install)
 
