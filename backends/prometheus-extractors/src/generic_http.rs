@@ -29,7 +29,10 @@ impl Extractor for GenericHttp {
         let mut content_length = None;
         let mut filename = filename_from_url(url);
 
-        match ureq::head(url).call() {
+        match ureq::head(url)
+            .set("User-Agent", concat!("Prometheus/", env!("CARGO_PKG_VERSION")))
+            .call()
+        {
             Ok(resp) => {
                 content_type = resp.header("content-type").map(|s| s.to_string());
                 content_length = resp.header("content-length").and_then(|s| s.parse::<u64>().ok());

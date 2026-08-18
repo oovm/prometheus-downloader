@@ -1,39 +1,85 @@
-//! Single-connection HTTP(S) downloader.
+//! Pluggable HTTP(S) transfer backends.
 
-use std::fs::{self, File};
-use std::io::{BufWriter, copy};
+mod simple;
+
+pub use simple::SimpleTransfer;
+
 use std::path::{Path, PathBuf};
 
 use prometheus_extractors::Registry;
-use prometheus_types::{DownloadResult, Error, Result, sanitize_filename};
+use prometheus_types::{DownloadResult, ProgressEvent, Result, TRANSFER_SIMPLE, sanitize_filename};
 
-/// Download `url` into `output_dir` using the built-in extractor registry.
+/// Request handed to a [`TransferBackend`].
+#[derive(Debug, Clone)]
+pub struct TransferRequest {
+    /// Source URL (already inspected / resolved by an extractor when using [`download`]).
+    pub url: String,
+    /// Destination directory (created by the caller or backend).
+    pub output_dir: PathBuf,
+    /// Preferred filename; backends may still uniquify collisions.
+    pub filename: String,
+    /// Expected content length when known from inspect.
+    pub expected_length: Option<u64>,
+}
+
+/// Pluggable transfer implementation (`simple` now; `aria2` / `native-range` later).
+pub trait TransferBackend: Send + Sync {
+    /// Stable backend id (`kebab-case`).
+    fn id(&self) -> &'static str;
+
+    /// Download `request.url` into `request.output_dir`.
+    fn transfer(
+        &self,
+        request: &TransferRequest,
+        progress: &mut dyn FnMut(ProgressEvent),
+    ) -> Result<DownloadResult>;
+}
+
+/// Download with the default [`SimpleTransfer`] backend (no progress listener).
 pub fn download(url: &str, output_dir: impl AsRef<Path>) -> Result<DownloadResult> {
+    download_with(&SimpleTransfer, url, output_dir, &mut |_| {})
+}
+
+/// Download using an explicit backend and progress sink.
+pub fn download_with(
+    backend: &dyn TransferBackend,
+    url: &str,
+    output_dir: impl AsRef<Path>,
+    progress: &mut dyn FnMut(ProgressEvent),
+) -> Result<DownloadResult> {
     let output_dir = output_dir.as_ref();
-    fs::create_dir_all(output_dir)?;
+    std::fs::create_dir_all(output_dir)?;
 
     let info = Registry::builtin().inspect(url)?;
     let filename = sanitize_filename(
         info.filename.as_deref().or(info.title.as_deref()).unwrap_or("download.bin"),
     );
-    let path = unique_path(output_dir, &filename);
+    let request = TransferRequest {
+        url: info.url,
+        output_dir: output_dir.to_path_buf(),
+        filename,
+        expected_length: info.content_length,
+    };
 
-    let resp = ureq::get(url).call().map_err(|err| Error::Network(err.to_string()))?;
-
-    let mut reader = resp.into_reader();
-    let file = File::create(&path)?;
-    let mut writer = BufWriter::new(file);
-    let bytes_written = copy(&mut reader, &mut writer)?;
-    writer.into_inner().map_err(|err| Error::Io(err.into_error()))?.sync_all()?;
-
-    Ok(DownloadResult {
-        path: path.to_string_lossy().into_owned(),
-        bytes_written,
-        filename: path.file_name().map(|s| s.to_string_lossy().into_owned()).unwrap_or(filename),
-    })
+    match backend.transfer(&request, progress) {
+        Ok(result) => Ok(result),
+        Err(err) => {
+            progress(ProgressEvent::Failed {
+                url: request.url.clone(),
+                message: err.to_string(),
+                transfer: backend.id().to_string(),
+            });
+            Err(err)
+        }
+    }
 }
 
-fn unique_path(dir: &Path, filename: &str) -> PathBuf {
+/// Default backend id used by [`download`].
+pub fn default_transfer_id() -> &'static str {
+    TRANSFER_SIMPLE
+}
+
+pub(crate) fn unique_path(dir: &Path, filename: &str) -> PathBuf {
     let candidate = dir.join(filename);
     if !candidate.exists() {
         return candidate;
@@ -57,8 +103,10 @@ fn unique_path(dir: &Path, filename: &str) -> PathBuf {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::fs;
     use std::io::{Read, Write};
     use std::net::TcpListener;
+    use std::sync::{Arc, Mutex};
     use std::thread;
     use std::time::{SystemTime, UNIX_EPOCH};
 
@@ -66,7 +114,6 @@ mod tests {
         let listener = TcpListener::bind("127.0.0.1:0").unwrap();
         let addr = listener.local_addr().unwrap();
         thread::spawn(move || {
-            // inspect() may HEAD; download() then GET.
             for _ in 0..4 {
                 let Ok((mut stream, _)) = listener.accept() else {
                     break;
@@ -99,5 +146,41 @@ mod tests {
         assert_eq!(bytes, b"hello-prometheus");
         assert_eq!(result.bytes_written, 16);
         let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn emits_progress_events() {
+        let url = serve_head_and_get(b"progress-body!!");
+        thread::sleep(std::time::Duration::from_millis(20));
+        let nanos = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_nanos();
+        let dir = std::env::temp_dir().join(format!("prometheus-dl-prog-{nanos}"));
+        let events = Arc::new(Mutex::new(Vec::new()));
+        let sink = events.clone();
+        let result = download_with(&SimpleTransfer, &url, &dir, &mut |event| {
+            sink.lock().unwrap().push(event);
+        })
+        .unwrap();
+        assert_eq!(result.bytes_written, 15);
+        let kinds: Vec<_> = events
+            .lock()
+            .unwrap()
+            .iter()
+            .map(|e| match e {
+                ProgressEvent::Started { .. } => "started",
+                ProgressEvent::Bytes { .. } => "bytes",
+                ProgressEvent::Finished { .. } => "finished",
+                ProgressEvent::Failed { .. } => "failed",
+            })
+            .collect();
+        assert_eq!(kinds.first().copied(), Some("started"));
+        assert_eq!(kinds.last().copied(), Some("finished"));
+        assert!(kinds.iter().any(|k| *k == "bytes"));
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn default_transfer_is_simple() {
+        assert_eq!(default_transfer_id(), "simple");
+        assert_eq!(SimpleTransfer.id(), "simple");
     }
 }

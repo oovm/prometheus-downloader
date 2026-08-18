@@ -9,6 +9,9 @@ pub const VERSION: &str = env!("CARGO_PKG_VERSION");
 /// Extractor id for direct HTTP(S) file URLs.
 pub const EXTRACTOR_GENERIC_HTTP: &str = "generic-http";
 
+/// Transfer backend id for the single-connection HTTP client.
+pub const TRANSFER_SIMPLE: &str = "simple";
+
 /// Errors returned by engine crates.
 #[derive(Debug, Error)]
 pub enum Error {
@@ -60,6 +63,20 @@ pub struct DownloadResult {
     pub bytes_written: u64,
     /// Filename component under the output directory.
     pub filename: String,
+}
+
+/// Structured download progress for Transfer backends → napi / MCP.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(tag = "kind", rename_all = "kebab-case", rename_all_fields = "camelCase")]
+pub enum ProgressEvent {
+    /// Transfer started; `totalBytes` is known when the server advertises length.
+    Started { url: String, total_bytes: Option<u64>, transfer: String },
+    /// Bytes written so far.
+    Bytes { url: String, bytes_written: u64, total_bytes: Option<u64>, transfer: String },
+    /// Transfer finished successfully.
+    Finished { url: String, bytes_written: u64, path: String, transfer: String },
+    /// Transfer failed after start (or during setup when `bytesWritten` is zero).
+    Failed { url: String, message: String, transfer: String },
 }
 
 /// Strip path separators and reserved characters from a download filename.
@@ -132,5 +149,18 @@ mod tests {
             filename_from_url("https://example.com/files/demo%20clip.bin?x=1"),
             Some("demo clip.bin".to_string())
         );
+    }
+
+    #[test]
+    fn progress_event_wire_kind() {
+        let event = ProgressEvent::Started {
+            url: "https://example.com/a.bin".into(),
+            total_bytes: Some(12),
+            transfer: TRANSFER_SIMPLE.into(),
+        };
+        let json = serde_json::to_value(&event).unwrap();
+        assert_eq!(json["kind"], "started");
+        assert_eq!(json["totalBytes"], 12);
+        assert_eq!(json["transfer"], "simple");
     }
 }
