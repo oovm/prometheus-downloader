@@ -1,0 +1,32 @@
+{
+    "name": "@doki-land/prometheus-skills",
+    "version": "0.0.1",
+    "description": "Agent skill (markdown) for installing and configuring Prometheus",
+    "license": "CC0-1.0",
+    "type": "module",
+    "exports": {
+        ".": "./SKILL.md",
+        "./SKILL.md": "./SKILL.md"
+    },
+    "files": [
+        "SKILL.md",
+        "README.md",
+        "references"
+    ],
+    "scripts": {
+        "test": "node --test tests/skill.test.mjs"
+    },
+    "engines": {
+        "node": ">=20"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/oovm/prometheus-downloader.git"
+    },
+    "keywords": [
+        "prometheus",
+        "skill",
+        "setup",
+        "cli"
+    ]
+}

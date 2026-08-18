@@ -8,7 +8,7 @@
     "scripts": {
         "napi:build": "node scripts/build-napi.mjs",
         "build": "pnpm napi:build && pnpm --filter @doki-land/prometheus-torch --filter @doki-land/prometheus-plugin --filter @doki-land/prometheus-plugin-generic-http --filter @doki-land/prometheus-plugin-local-file --filter @doki-land/prometheus-harness --filter @doki-land/prometheus run build",
-        "test": "pnpm --filter @doki-land/prometheus-torch --filter @doki-land/prometheus-plugin --filter @doki-land/prometheus-harness --filter @doki-land/prometheus run test",
+        "test": "pnpm --filter @doki-land/prometheus-skills --filter @doki-land/prometheus-torch --filter @doki-land/prometheus-plugin --filter @doki-land/prometheus-harness --filter @doki-land/prometheus run test",
         "prometheus": "node frontends/prometheus/bin/prometheus.js",
         "placeholder": "node scripts/ci/publish-placeholder.mjs",
         "placeholder:publish": "node scripts/ci/publish-placeholder.mjs publish",

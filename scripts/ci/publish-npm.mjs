@@ -32,6 +32,7 @@ const NATIVE_PLATFORMS = [
 
 /** @type {{ dir: string, publishName?: string }[]} */
 const JS_PACKAGES = [
+    { dir: 'frontends/prometheus-skills', publishName: '@doki-land/prometheus-skills' },
     { dir: 'frontends/prometheus-torch', publishName: '@doki-land/prometheus-torch' },
     { dir: 'frontends/prometheus-plugin', publishName: '@doki-land/prometheus-plugin' },
     { dir: 'frontends/prometheus-plugin-generic-http', publishName: '@doki-land/prometheus-plugin-generic-http' },
@@ -245,10 +246,6 @@ function publishJs(version) {
     const optionalNatives = Object.fromEntries(NATIVE_PLATFORMS.map((p) => [`@doki-land/prometheus-${p.short}`, version]));
 
     const packages = [...JS_PACKAGES];
-    const skillsDir = path.join(ROOT, 'frontends/prometheus-skills');
-    if (fs.existsSync(skillsDir)) {
-        packages.push({ dir: 'frontends/prometheus-skills', publishName: '@doki-land/prometheus-skills' });
-    }
 
     for (const spec of packages) {
         const abs = path.join(ROOT, spec.dir);
