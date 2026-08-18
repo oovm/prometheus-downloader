@@ -2,7 +2,7 @@
 
 Prometheus plugin for **direct** `http://` and `https://` file URLs. It implements the `@doki-land/prometheus-plugin` contract: `matches` + `inspect`. Actual bytes on disk are still written by the native transfer backend inside the platform `.node` addon.
 
-This package is a **thin verification surface** for Harness and the product bundle. Prefer growing HTTP coverage and transfer behavior in the Rust engine, not by cloning this plugin per host.
+This package is a **thin verification surface** for Harness and the product bundle. Growing **site coverage** (more media hosts) belongs in Rust extractors—not by cloning this plugin per host.
 
 ## Install
 

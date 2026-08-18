@@ -35,7 +35,7 @@ What works today on the happy path:
 - Torch `evaluateJavascript` / `instantiateWasm`
 - Harness plugin list / create / test / fetch helpers
 
-What is intentionally thin or stubbed: product MCP server, multi-connection Range transfer, real vault encryption, large site coverage.
+What is intentionally thin or stubbed: product MCP server, multi-connection Range transfer, real vault encryption, and **broad media-site coverage** (more hosts still to land in Rust extractors).
 
 ## Quick start (after install)
 

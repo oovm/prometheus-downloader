@@ -39,7 +39,7 @@ Helpers re-exported for tests and callers:
 ## Design notes
 
 - Extractors resolve **metadata**, not bytes. Transfer belongs in `prometheus-downloader`.
-- Site-specific adapters should stay focused: return honest `MediaInfo` (and later request parameters), without turning this crate into a dump of unrelated host logic.
+- Site-specific adapters should stay focused: return honest `MediaInfo` (and later request parameters). **Coverage means more media sites / hosts**, added here—not by stacking npm plugins.
 - npm `@doki-land/prometheus-plugin-*` packages mirror a subset of this surface for Harness verification; the engine registry remains authoritative for native `info` / `download`.
 
 ## License

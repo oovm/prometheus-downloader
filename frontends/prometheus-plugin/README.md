@@ -84,7 +84,7 @@ resolvePlugin(loaded: LoadedPlugin[], url: string): LoadedPlugin | undefined
 | `@doki-land/prometheus-plugin-generic-http` | `generic-http` | `http://` / `https://` |
 | `@doki-land/prometheus-plugin-local-file` | `local-file` | `file:` |
 
-These are **verification / contract** surfaces for Harness and the product bundle. Broad media coverage and transfer performance belong in the Rust extractors + transfer backends inside the `.node` addon — do not grow capability by stacking dozens of npm plugins.
+These are **verification / contract** surfaces for Harness and the product bundle. **Tool coverage means more media sites / hosts** (Bilibili, NetEase Cloud Music, YouTube, …). That work belongs in Rust extractors inside the `.node` addon—not by stacking dozens of npm plugins. Transfer backends are a separate axis (how bytes move), not the coverage metric.
 
 ## Authoring workflow
 
