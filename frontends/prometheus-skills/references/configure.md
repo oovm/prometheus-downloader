@@ -68,4 +68,4 @@ pnpm --filter @doki-land/prometheus build
 
 - Output directory would overwrite something they care about
 - Job is CI but you were about to run a local-only `napi:build`
-- They want credentials / vault setup — that is not this skill’s default path; confirm before touching vault files
+- They want credentials / cookies / a vault — follow [credentials.md](credentials.md). Ask before writing any cookie file. The vault does **not** encrypt yet; do not store cookies there and call it safe

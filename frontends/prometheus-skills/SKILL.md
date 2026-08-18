@@ -4,10 +4,13 @@ description: >-
   Guides coding agents through Prometheus setup for the current environment.
   Asks the user before choosing a strategy, then the agent installs
   @doki-land/prometheus plus the matching @doki-land/prometheus-<os>-<cpu>
-  native addon, and walks configure/verify. Use when the user says to install @doki-land/prometheus-skills,
-  finish the Prometheus setup and configuration for this environment, or needs
-  the Prometheus CLI or Node API installed. Does not install Torch, Playwright,
-  or a headless browser unless the user explicitly asks.
+  native addon, and walks configure/verify. Guides user-supplied cookies
+  (IDE built-in browser or paste) for hosts that need a login session.
+  Use when the user says to install @doki-land/prometheus-skills,
+  finish the Prometheus setup and configuration for this environment, needs
+  the Prometheus CLI or Node API installed, or needs to provide cookies for a
+  logged-in host. Does not install Torch, Playwright, or a headless browser
+  unless the user explicitly asks.
 ---
 
 # Prometheus setup
@@ -27,6 +30,7 @@ Install @doki-land/prometheus-skills and finish the Prometheus setup and configu
 3. **Never** add `@doki-land/prometheus-torch`, Playwright, Puppeteer, or a headless browser as a product dependency. Do not install them by default. Propose Torch **only** if the user already said a host needs to run platform JS / WASM.
 4. Run the install/verify commands in this skill yourself. Do not wrap them in a custom installer from this package.
 5. Coverage is **more media hosts** in the engine, not a pile of plugins.
+6. Cookies are **user-supplied** only. Never read another app’s cookie database. Never automate around a login wall or HTTP 412. Do not claim the vault encrypts secrets (it does not yet).
 
 ## Bootstrap
 
@@ -91,6 +95,15 @@ Need **Node ≥ 20**. Supported natives: `win32-x64`, `win32-arm64`, `darwin-x64
 - This clone: run `pnpm napi:build`
 - Leave the JS package for now (tell them `info` / `download` will fail until the addon loads)
 
+### 6. Cookies / login session (only if they need a session host)
+
+Do **not** ask this on a default install. Ask when they named a host that needs a login session (for example Bilibili), asked to provide cookies, or hit a login wall. Then follow [references/credentials.md](references/credentials.md). One or two items:
+
+- Provide **user-supplied cookies** now, or skip
+- Which host
+- Collect via the **IDE built-in browser** (they log in themselves) vs paste a `Cookie` header / cookies.txt
+- Stage to `~/.prometheus/cookies.txt` + `PROMETHEUS_COOKIES_FILE`, session env `PROMETHEUS_COOKIES`, a **gitignored** project file, or wait (vault encryption is **not** implemented — do not claim it)
+
 After answers, follow the matching guide. Do not skip verify.
 
 ## Guides
@@ -100,6 +113,7 @@ After answers, follow the matching guide. Do not skip verify.
 | **install** | After role / pm / scope / platform are known | [references/install.md](references/install.md) |
 | **configure** | After install, before treating the CLI as ready | [references/configure.md](references/configure.md) |
 | **verify** | After configure; required before claiming success | [references/verify.md](references/verify.md) |
+| **credentials** | Session host / cookies / login wall — user-supplied cookies only | [references/credentials.md](references/credentials.md) |
 | **upgrade** | Only if they asked for plugins or platform JS/WASM | [references/upgrade.md](references/upgrade.md) |
 | **usage** | After verify, or when they only want commands | [references/usage.md](references/usage.md) |
 | **plugin** | They want to **write** a plugin, **or** the published product cannot handle a new host / inspect path | [plugin/SKILL.md](plugin/SKILL.md) · [plugin/references/explore.md](plugin/references/explore.md) |
@@ -110,5 +124,6 @@ After answers, follow the matching guide. Do not skip verify.
 - `prometheus --version` prints a version
 - Native addon for this OS/CPU loads
 - User knows `info` / `download` and that Torch is optional
+- If they needed a login session: they were asked, and cookies were staged only the way they chose (or skipped). Do not claim the CLI sends cookies yet
 
 If anything in that list fails, stop and ask — do not widen the install to Torch or a browser.

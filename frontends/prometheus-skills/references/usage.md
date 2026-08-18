@@ -47,4 +47,6 @@ listTransfers();
 - Matching `@doki-land/prometheus-<os>-<cpu>` must load
 - Use only URLs / files the user is allowed to fetch
 
+Hosts that need a logged-in session may require **user-supplied cookies**. The CLI has **no** cookies flag today; staging is env / a local file — [credentials.md](credentials.md).
+
 Torch (`TorchRuntime`) is **not** exported from the product package. See [upgrade.md](upgrade.md) if they explicitly need platform JS / WASM.

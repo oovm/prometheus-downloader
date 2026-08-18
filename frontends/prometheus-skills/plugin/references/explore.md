@@ -40,7 +40,7 @@ Keep PRs human-reviewed. Do not publish the exploration plugin as if it were pro
 | Agent skipped asking and created a plugin | Violated ask-first | Stop; confirm they want the package; delete only if they say so |
 | Agent told them only “coverage is native” and stopped | Missed this guide | Ask the create-plugin question above |
 | `generic-http` already matches the URL | Direct file; not a new inspect path | Do not scaffold; debug network / `-o` instead |
-| They wanted YouTube / Bilibili “support” as an npm install | Product coverage ≠ plugin pile | Ask: exploration plugin in **this clone**, or wait for a native extractor? Do not `npm i` extra site plugins into the product |
+| They wanted YouTube / Bilibili “support” as an npm install | Product coverage ≠ plugin pile | Ask: exploration plugin in **this clone**, or wait for a native extractor? If the host needs a **login session**, follow [../../references/credentials.md](../../references/credentials.md) for user-supplied cookies. Do not `npm i` extra site plugins into the product |
 
 ## Stop and ask
 

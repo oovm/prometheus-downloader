@@ -41,6 +41,7 @@ console.log(version());
 | `native addon not found` / cannot load `.node` | `optionalDependencies` not resolved; wrong platform package; this clone without `pnpm napi:build` | **Stop.** Ask SKILL.md question 5 |
 | Version works, `info`/`download` throw | Addon loaded but network/URL invalid | Ask for a URL they can fetch; do not widen to Torch |
 | `info` 404 / extractor error on a media host | Published extractors / bundled plugins do not handle this host or inspect path | **Stop and ask** to start exploration with a new plugin — [plugin/references/explore.md](../plugin/references/explore.md). Do not install Torch or a browser unless they explicitly need JS/WASM |
+| Login wall / HTTP 412 on a session host | Host wants a logged-in session; cookies are not injected yet | **Stop and ask** — [credentials.md](credentials.md). Do not automate around the challenge |
 | Works locally, fails in CI | Runner OS/CPU differs; optional native omitted | Ask before adding `--omit=optional` workarounds |
 
 Typical native-missing message looks like: run `pnpm napi:build` (writes `frontends/prometheus-<os>-<cpu>/`). That hint is for **this clone**. On a registry install, add the matching `@doki-land/prometheus-<os>-<cpu>` package instead — after asking.

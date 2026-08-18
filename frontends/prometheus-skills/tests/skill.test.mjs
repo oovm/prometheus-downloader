@@ -33,7 +33,7 @@ test('SKILL.md matches Cursor skill frontmatter', () => {
 });
 
 test('reference guides exist and tell the agent to ask', () => {
-    for (const name of ['install', 'configure', 'verify', 'upgrade', 'usage']) {
+    for (const name of ['install', 'configure', 'verify', 'upgrade', 'usage', 'credentials']) {
         const body = read(`references/${name}.md`);
         assert.ok(body.length > 80, `${name}.md too short`);
         if (name !== 'usage') {
@@ -47,10 +47,28 @@ test('reference guides exist and tell the agent to ask', () => {
     const upgrade = read('references/upgrade.md');
     assert.match(upgrade, /Do \*\*not\*\* propose them at the end of a normal install|not default/i);
     assert.match(upgrade, /Playwright/);
-    assert.match(upgrade, /explore\.md/);
+    assert.match(upgrade, /explore.md/);
+    assert.match(upgrade, /credentials.md/);
     const verify = read('references/verify.md');
-    assert.match(verify, /explore\.md/);
+    assert.match(verify, /explore.md/);
     assert.match(verify, /Create a new plugin|create a plugin/i);
+    assert.match(verify, /credentials.md/);
+});
+
+test('credentials guide is user-supplied cookies only', () => {
+    const skill = read('SKILL.md');
+    assert.match(skill, /references\/credentials.md/);
+    assert.match(skill, /user-supplied cookies/i);
+    assert.match(skill, /IDE built-in browser/);
+    const credentials = read('references/credentials.md');
+    assert.match(credentials, /user-supplied cookies/i);
+    assert.match(credentials, /PROMETHEUS_COOKIES_FILE/);
+    assert.match(credentials, /PROMETHEUS_COOKIES/);
+    assert.match(credentials, /Simple Browser|IDE built-in browser/);
+    assert.match(credentials, /encryption is not implemented/i);
+    assert.match(credentials, /Netscape/);
+    assert.match(credentials, /AskQuestion/);
+    assert.match(credentials, /does \*\*not\*\* consume these values today|does not consume/i);
 });
 
 test('plugin authoring skill is markdown and asks first', () => {
@@ -69,6 +87,7 @@ test('plugin authoring skill is markdown and asks first', () => {
     const explore = read('plugin/references/explore.md');
     assert.match(explore, /Create a new plugin/);
     assert.match(explore, /npx @doki-land\/prometheus-harness create/);
+    assert.match(explore, /credentials.md/);
     const scaffold = read('plugin/references/scaffold.md');
     assert.match(scaffold, /npx @doki-land\/prometheus-harness create/);
 });
