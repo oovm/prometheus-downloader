@@ -1,0 +1,11 @@
+{
+    "mcpServers": {
+        "prometheus-harness": {
+            "command": "node",
+            "args": ["frontends/prometheus-harness/bin/prometheus-harness.js", "mcp"],
+            "env": {
+                "PROMETHEUS_WORKSPACE": "."
+            }
+        }
+    }
+}

@@ -1,0 +1,38 @@
+{
+    "name": "@doki-land/prometheus-plugin",
+    "version": "0.0.1",
+    "description": "Prometheus strategy plugin contract and loader",
+    "license": "CC0-1.0",
+    "type": "module",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "default": "./dist/index.js"
+        }
+    },
+    "files": [
+        "dist",
+        "README.md"
+    ],
+    "scripts": {
+        "build": "tsc -p tsconfig.json",
+        "test": "node --test tests/loader.test.mjs"
+    },
+    "devDependencies": {
+        "@types/node": "^22.15.0",
+        "typescript": "^5.8.3"
+    },
+    "engines": {
+        "node": ">=20"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/oovm/prometheus-downloader.git"
+    },
+    "keywords": [
+        "prometheus",
+        "plugin"
+    ]
+}

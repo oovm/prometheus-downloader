@@ -72,7 +72,15 @@ function loadLocalEnv(filePath) {
 const localEnv = loadLocalEnv(ENV_PATH);
 
 /** Keep in sync with scripts/ci/publish-npm.mjs (real publish package set). */
-const JS_STUBS = ['@doki-land/prometheus', '@doki-land/prometheus-skills'];
+const JS_STUBS = [
+    '@doki-land/prometheus',
+    '@doki-land/prometheus-torch',
+    '@doki-land/prometheus-plugin',
+    '@doki-land/prometheus-harness',
+    '@doki-land/prometheus-strategy-generic-http',
+    '@doki-land/prometheus-strategy-local-file',
+    '@doki-land/prometheus-skills',
+];
 
 const NATIVE_STUBS = [
     { name: '@doki-land/prometheus-win32-x64', os: ['win32'], cpu: ['x64'] },
@@ -516,10 +524,7 @@ function writeStub(spec, dir, authToken) {
     if (spec.os) pkg.os = spec.os;
     if (spec.cpu) pkg.cpu = spec.cpu;
     fs.writeFileSync(path.join(dir, 'package.json'), `${JSON.stringify(pkg, null, 2)}\n`);
-    fs.writeFileSync(
-        path.join(dir, 'README.md'),
-        `# ${spec.name}\n\nPlaceholder package (${VERSION}). Reserved for Prometheus.\n`,
-    );
+    fs.writeFileSync(path.join(dir, 'README.md'), `# ${spec.name}\n\nPlaceholder package (${VERSION}). Reserved for Prometheus.\n`);
     if (authToken) {
         fs.writeFileSync(path.join(dir, '.npmrc'), `//registry.npmjs.org/:_authToken=${authToken}\n`, {
             mode: 0o600,

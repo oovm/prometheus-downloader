@@ -1,21 +1,25 @@
 {
-  "name": "prometheus-downloader",
-  "version": "0.0.1",
-  "private": true,
-  "type": "module",
-  "packageManager": "pnpm@10.27.0",
-  "license": "CC0-1.0",
-  "scripts": {
-    "napi:build": "node scripts/build-napi.mjs",
-    "build": "pnpm napi:build && pnpm --filter @doki-land/prometheus run build",
-    "test": "pnpm --filter @doki-land/prometheus run test",
-    "prometheus": "node frontends/prometheus/bin/prometheus.js",
-    "placeholder": "node scripts/ci/publish-placeholder.mjs",
-    "placeholder:publish": "node scripts/ci/publish-placeholder.mjs publish",
-    "placeholder:trust": "node scripts/ci/publish-placeholder.mjs trust"
-  },
-  "devDependencies": {
-    "@types/node": "^22.15.0",
-    "typescript": "^5.8.3"
-  }
+    "name": "prometheus-downloader",
+    "version": "0.0.1",
+    "private": true,
+    "type": "module",
+    "packageManager": "pnpm@10.27.0",
+    "license": "CC0-1.0",
+    "scripts": {
+        "napi:build": "node scripts/build-napi.mjs",
+        "build": "pnpm napi:build && pnpm --filter @doki-land/prometheus-torch --filter @doki-land/prometheus-plugin --filter @doki-land/prometheus-strategy-generic-http --filter @doki-land/prometheus-strategy-local-file --filter @doki-land/prometheus-harness --filter @doki-land/prometheus run build",
+        "test": "pnpm --filter @doki-land/prometheus-torch --filter @doki-land/prometheus-plugin --filter @doki-land/prometheus-harness --filter @doki-land/prometheus run test",
+        "prometheus": "node frontends/prometheus/bin/prometheus.js",
+        "placeholder": "node scripts/ci/publish-placeholder.mjs",
+        "placeholder:publish": "node scripts/ci/publish-placeholder.mjs publish",
+        "placeholder:trust": "node scripts/ci/publish-placeholder.mjs trust",
+        "lint": "biome check .",
+        "fmt": "biome format --write . && cargo fmt --all --manifest-path Cargo.toml",
+        "fmt:check": "biome format . && cargo fmt --all --check --manifest-path Cargo.toml"
+    },
+    "devDependencies": {
+        "@biomejs/biome": "^2.5.7",
+        "@types/node": "^22.15.0",
+        "typescript": "^5.8.3"
+    }
 }

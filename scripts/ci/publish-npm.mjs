@@ -32,8 +32,12 @@ const NATIVE_PLATFORMS = [
 
 /** @type {{ dir: string, publishName?: string }[]} */
 const JS_PACKAGES = [
+    { dir: 'frontends/prometheus-torch', publishName: '@doki-land/prometheus-torch' },
+    { dir: 'frontends/prometheus-plugin', publishName: '@doki-land/prometheus-plugin' },
+    { dir: 'frontends/prometheus-strategy-generic-http', publishName: '@doki-land/prometheus-strategy-generic-http' },
+    { dir: 'frontends/prometheus-strategy-local-file', publishName: '@doki-land/prometheus-strategy-local-file' },
+    { dir: 'frontends/prometheus-harness', publishName: '@doki-land/prometheus-harness' },
     { dir: 'frontends/prometheus', publishName: '@doki-land/prometheus' },
-    // skills package lands when the frontend package exists; publish skips missing dirs
 ];
 
 function fail(msg) {
@@ -224,9 +228,7 @@ function publishNative(version, artifactsRoot) {
             console.log(` ✓ ${name}@${version} already on registry — skip`);
             skipped += 1;
         } else if (outcome === 'auth') {
-            fail(
-                `OIDC/auth failed for ${name}. Add Trusted Publisher: file=publish-npm.yml env=NPM_PUBLISH repo=oovm/prometheus-downloader`,
-            );
+            fail(`OIDC/auth failed for ${name}. Add Trusted Publisher: file=publish-npm.yml env=NPM_PUBLISH repo=oovm/prometheus-downloader`);
         } else fail(`publish failed for ${name}`);
     }
     return { published, skipped };
@@ -238,9 +240,7 @@ function publishNative(version, artifactsRoot) {
 function publishJs(version) {
     let published = 0;
     let skipped = 0;
-    const optionalNatives = Object.fromEntries(
-        NATIVE_PLATFORMS.map((p) => [`@doki-land/prometheus-${p.short}`, version]),
-    );
+    const optionalNatives = Object.fromEntries(NATIVE_PLATFORMS.map((p) => [`@doki-land/prometheus-${p.short}`, version]));
 
     const packages = [...JS_PACKAGES];
     const skillsDir = path.join(ROOT, 'frontends/prometheus-skills');
@@ -331,9 +331,7 @@ function publishJs(version) {
             console.log(` ✓ ${name}@${version} already on registry — skip`);
             skipped += 1;
         } else if (outcome === 'auth') {
-            fail(
-                `OIDC/auth failed for ${name}. Add Trusted Publisher: file=publish-npm.yml env=NPM_PUBLISH repo=oovm/prometheus-downloader`,
-            );
+            fail(`OIDC/auth failed for ${name}. Add Trusted Publisher: file=publish-npm.yml env=NPM_PUBLISH repo=oovm/prometheus-downloader`);
         } else if (outcome === 'missing') {
             fail(
                 `${name} is not on the registry yet. Create the name first via placeholder stubs (pnpm placeholder:publish), then retry real publish.`,

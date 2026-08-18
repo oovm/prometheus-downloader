@@ -1,11 +1,11 @@
 {
-    "name": "@doki-land/prometheus",
+    "name": "@doki-land/prometheus-harness",
     "version": "0.0.1",
-    "description": "Prometheus media acquisition CLI and Node API",
+    "description": "MCP tools and CLI for authoring Prometheus strategy plugins",
     "license": "CC0-1.0",
     "type": "module",
     "bin": {
-        "prometheus": "./bin/prometheus.js"
+        "prometheus-harness": "./bin/prometheus-harness.js"
     },
     "main": "./dist/index.js",
     "types": "./dist/index.d.ts",
@@ -18,27 +18,16 @@
     "files": [
         "bin",
         "dist",
-        "Readme.md",
-        "License.md"
+        "README.md"
     ],
     "scripts": {
         "build": "tsc -p tsconfig.json",
-        "test": "node --test tests/smoke.test.mjs"
+        "test": "node --test tests/harness.test.mjs"
     },
     "dependencies": {
         "@doki-land/prometheus-plugin": "workspace:*",
-        "@doki-land/prometheus-strategy-generic-http": "workspace:*",
-        "@doki-land/prometheus-strategy-local-file": "workspace:*",
         "@doki-land/prometheus-torch": "workspace:*",
         "commander": "^13.1.0"
-    },
-    "optionalDependencies": {
-        "@doki-land/prometheus-win32-x64": "workspace:*",
-        "@doki-land/prometheus-win32-arm64": "workspace:*",
-        "@doki-land/prometheus-darwin-x64": "workspace:*",
-        "@doki-land/prometheus-darwin-arm64": "workspace:*",
-        "@doki-land/prometheus-linux-x64": "workspace:*",
-        "@doki-land/prometheus-linux-arm64": "workspace:*"
     },
     "devDependencies": {
         "@types/node": "^22.15.0",
@@ -53,9 +42,7 @@
     },
     "keywords": [
         "prometheus",
-        "download",
-        "media",
-        "cli",
-        "mcp"
+        "mcp",
+        "plugin"
     ]
 }

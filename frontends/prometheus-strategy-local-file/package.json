@@ -1,0 +1,41 @@
+{
+    "name": "@doki-land/prometheus-strategy-local-file",
+    "version": "0.0.1",
+    "description": "Prometheus strategy for local file URLs",
+    "license": "CC0-1.0",
+    "type": "module",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "prometheusStrategy": {
+        "id": "local-file"
+    },
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "default": "./dist/index.js"
+        }
+    },
+    "files": [
+        "dist",
+        "README.md"
+    ],
+    "scripts": {
+        "build": "tsc -p tsconfig.json"
+    },
+    "devDependencies": {
+        "@doki-land/prometheus-plugin": "workspace:*",
+        "@types/node": "^22.15.0",
+        "typescript": "^5.8.3"
+    },
+    "engines": {
+        "node": ">=20"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/oovm/prometheus-downloader.git"
+    },
+    "keywords": [
+        "prometheus",
+        "strategy"
+    ]
+}
