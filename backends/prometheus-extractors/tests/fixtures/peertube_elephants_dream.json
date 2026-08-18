@@ -1,0 +1,56 @@
+{
+    "uuid": "7bc04dcc-1bde-4350-99a2-8d67fc1534e5",
+    "shortUUID": "ghjnHKBEA5fD3iJFp9asjz",
+    "name": "Elephants Dream",
+    "duration": 30,
+    "url": "https://peertube2.cpy.re/videos/watch/7bc04dcc-1bde-4350-99a2-8d67fc1534e5",
+    "files": [
+        {
+            "fileUrl": "https://peertube2.cpy.re/static/web-videos/1d510bc9-eb94-41c0-b217-eda592c806a5-0.mp4",
+            "fileDownloadUrl": "https://peertube2.cpy.re/download/web-videos/7bc04dcc-1bde-4350-99a2-8d67fc1534e5-0.mp4",
+            "size": 1229666,
+            "resolution": {
+                "id": 0,
+                "label": "Audio only"
+            }
+        }
+    ],
+    "streamingPlaylists": [
+        {
+            "files": [
+                {
+                    "fileUrl": "https://peertube2.cpy.re/static/streaming-playlists/hls/7bc04dcc-1bde-4350-99a2-8d67fc1534e5/43a70722-86f8-4039-8ae4-ebb846937ebf-1080-fragmented.mp4",
+                    "size": 6305624,
+                    "resolution": {
+                        "id": 1080,
+                        "label": "1080p"
+                    }
+                },
+                {
+                    "fileUrl": "https://peertube2.cpy.re/static/streaming-playlists/hls/7bc04dcc-1bde-4350-99a2-8d67fc1534e5/23eb76ce-3b43-48a3-bb6c-2ee8126de1cf-480-fragmented.mp4",
+                    "size": 1871004,
+                    "resolution": {
+                        "id": 480,
+                        "label": "480p"
+                    }
+                },
+                {
+                    "fileUrl": "https://peertube2.cpy.re/static/streaming-playlists/hls/7bc04dcc-1bde-4350-99a2-8d67fc1534e5/d839425f-ba34-41e0-b0f1-939f8254212f-240-fragmented.mp4",
+                    "size": 637284,
+                    "resolution": {
+                        "id": 240,
+                        "label": "240p"
+                    }
+                },
+                {
+                    "fileUrl": "https://peertube2.cpy.re/static/streaming-playlists/hls/7bc04dcc-1bde-4350-99a2-8d67fc1534e5/4f433f9e-1749-401c-b53d-ad8e57d37595-0-fragmented.mp4",
+                    "size": 494596,
+                    "resolution": {
+                        "id": 0,
+                        "label": "Audio only"
+                    }
+                }
+            ]
+        }
+    ]
+}

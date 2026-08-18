@@ -5,6 +5,7 @@
 mod generic_http;
 mod internet_archive;
 mod local_file;
+mod peertube;
 mod wikimedia_commons;
 
 pub use generic_http::{GenericHttp, filename_from_content_disposition};
@@ -12,6 +13,7 @@ pub use internet_archive::{
     InternetArchive, item_id as internet_archive_item_id, media_from_metadata_json,
 };
 pub use local_file::{LocalFile, file_url_to_path};
+pub use peertube::{PeerTube, media_from_video_json, watch_target as peertube_watch_target};
 pub use wikimedia_commons::{
     WikimediaCommons, file_title as wikimedia_file_title, media_from_api_json,
 };
@@ -41,6 +43,7 @@ impl Registry {
                 Box::new(LocalFile),
                 Box::new(InternetArchive),
                 Box::new(WikimediaCommons),
+                Box::new(PeerTube),
                 Box::new(GenericHttp),
             ],
         }

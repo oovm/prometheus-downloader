@@ -16,14 +16,15 @@ impl Extractor for WikimediaCommons {
     }
 
     fn matches(&self, url: &str) -> bool {
-        file_title(url).is_some()
+        file_page(url).is_some()
     }
 
     fn inspect(&self, url: &str) -> Result<MediaInfo> {
-        let title = file_title(url).ok_or_else(|| Error::UnsupportedUrl(url.to_string()))?;
+        let page = file_page(url).ok_or_else(|| Error::UnsupportedUrl(url.to_string()))?;
         let api = format!(
-            "https://commons.wikimedia.org/w/api.php?action=query&titles={}&prop=imageinfo&iiprop=url|size|mime&format=json",
-            percent_encode(&title)
+            "https://{}/w/api.php?action=query&titles={}&prop=imageinfo&iiprop=url|size|mime&format=json",
+            page.host,
+            percent_encode(&page.title)
         );
         let resp = ureq::get(&api)
             .set("User-Agent", USER_AGENT)
@@ -35,28 +36,71 @@ impl Extractor for WikimediaCommons {
     }
 }
 
+/// Host + `File:` title extracted from a Commons / Wikipedia file URL.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct FilePage {
+    /// Hostname used for `/w/api.php` (no scheme).
+    pub host: String,
+    /// Canonical `File:…` title.
+    pub title: String,
+}
+
 /// Extract a `File:…` title from a Commons file URL.
 pub fn file_title(url: &str) -> Option<String> {
+    file_page(url).map(|page| page.title)
+}
+
+/// Parse Commons or Wikipedia `File:` page URLs.
+pub fn file_page(url: &str) -> Option<FilePage> {
     let trimmed = url.trim();
     let lower = trimmed.to_ascii_lowercase();
-    // Direct upload URLs stay with generic-http.
     if lower.contains("upload.wikimedia.org/") {
         return None;
     }
 
-    if let Some(idx) = lower.find("commons.wikimedia.org/wiki/") {
-        let rest = &trimmed[idx + "commons.wikimedia.org/wiki/".len()..];
+    let host = url_host(trimmed)?;
+    if !is_mediawiki_file_host(&host) {
+        return None;
+    }
+
+    if let Some(idx) = lower.find("/wiki/") {
+        let rest = &trimmed[idx + "/wiki/".len()..];
         let segment = rest.split(['#', '?']).next().unwrap_or(rest);
-        return normalize_file_title(segment);
+        let title = normalize_file_title(segment)?;
+        return Some(FilePage { host, title });
     }
 
     if let Some(idx) = lower.find("title=") {
         let rest = &trimmed[idx + "title=".len()..];
         let segment = rest.split(['#', '&']).next().unwrap_or(rest);
-        return normalize_file_title(segment);
+        let title = normalize_file_title(segment)?;
+        return Some(FilePage { host, title });
     }
 
     None
+}
+
+fn url_host(url: &str) -> Option<String> {
+    let rest =
+        url.trim().strip_prefix("https://").or_else(|| url.trim().strip_prefix("http://"))?;
+    let host = rest.split(['/', '?', '#']).next()?.trim();
+    if host.is_empty() { None } else { Some(host.to_ascii_lowercase()) }
+}
+
+fn is_mediawiki_file_host(host: &str) -> bool {
+    let host = host.strip_prefix("www.").unwrap_or(host);
+    host == "commons.wikimedia.org"
+        || host == "wikipedia.org"
+        || host.ends_with(".wikipedia.org")
+        || host.ends_with(".wikimedia.org")
+        || host.ends_with(".wiktionary.org")
+        || host.ends_with(".wikibooks.org")
+        || host.ends_with(".wikisource.org")
+        || host.ends_with(".wikinews.org")
+        || host.ends_with(".wikiversity.org")
+        || host.ends_with(".wikivoyage.org")
+        || host.ends_with(".wikiquote.org")
+        || host.ends_with(".mediawiki.org")
 }
 
 fn normalize_file_title(segment: &str) -> Option<String> {

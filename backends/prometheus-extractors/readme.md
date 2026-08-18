@@ -10,10 +10,11 @@ Not published to crates.io. Consumed by `prometheus-downloader` and exposed to J
 |----|--------|---------|-------|
 | `local-file` | `LocalFile` | `file:` | Local filesystem `stat` |
 | `internet-archive` | `InternetArchive` | `archive.org/details/…` (also `/download/` / `/metadata/`) | Public metadata API → chooses a downloadable media file |
-| `wikimedia-commons` | `WikimediaCommons` | `commons.wikimedia.org/wiki/File:…` | MediaWiki `imageinfo` API → `upload.wikimedia.org` URL |
+| `wikimedia-commons` | `WikimediaCommons` | Commons / Wikipedia / sister-project `File:` pages | MediaWiki `imageinfo` API on that host → `upload.wikimedia.org` URL |
+| `peertube` | `PeerTube` | `/w/{id}`, `/videos/watch/{id}`, `/videos/embed/{id}` | Instance REST `GET /api/v1/videos/{id}` → highest-resolution `fileUrl` |
 | `generic-http` | `GenericHttp` | `http://` / `https://` | HEAD → Range → GET header probe; User-Agent `Prometheus/<version>` |
 
-Registry order: **local-file → internet-archive → wikimedia-commons → generic-http**.
+Registry order: **local-file → internet-archive → wikimedia-commons → peertube → generic-http**.
 
 ```rust
 use prometheus_extractors::Registry;
@@ -33,7 +34,7 @@ pub trait Extractor: Send + Sync {
 
 **Tool coverage means more media sites / hosts**, added here—not by stacking npm plugins. Transfer backends are a separate axis.
 
-Helpers: `filename_from_content_disposition`, `file_url_to_path`, `media_from_metadata_json`, `media_from_api_json`.
+Helpers: `filename_from_content_disposition`, `file_url_to_path`, `media_from_metadata_json`, `media_from_api_json`, `media_from_video_json`.
 
 ## Tests
 

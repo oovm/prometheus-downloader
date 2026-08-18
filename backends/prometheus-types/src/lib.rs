@@ -17,8 +17,11 @@ pub const EXTRACTOR_LOCAL_FILE: &str = "local-file";
 /// Extractor id for Internet Archive item pages (`archive.org/details/…`).
 pub const EXTRACTOR_INTERNET_ARCHIVE: &str = "internet-archive";
 
-/// Extractor id for Wikimedia Commons file pages.
+/// Extractor id for Wikimedia Commons / Wikipedia `File:` pages.
 pub const EXTRACTOR_WIKIMEDIA_COMMONS: &str = "wikimedia-commons";
+
+/// Extractor id for PeerTube watch URLs (public REST API).
+pub const EXTRACTOR_PEERTUBE: &str = "peertube";
 
 /// Transfer backend id for the in-process single-connection HTTP client.
 pub const TRANSFER_SIMPLE: &str = "simple";

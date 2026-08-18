@@ -30,7 +30,7 @@ What works today on the happy path:
 
 - `prometheus --version`
 - `info` / `download` for direct HTTP(S) file URLs (native engine)
-- `info` for Internet Archive item pages and Wikimedia Commons `File:` pages (native extractors)
+- `info` for Internet Archive items, Wikimedia / Wikipedia `File:` pages, and PeerTube watch URLs (native extractors)
 - `downloadWithEvents` for structured progress (`started` / `bytes` / `finished` / `failed`)
 - `file:` metadata via the bundled local-file plugin (and native extractor fallback)
 - Torch `evaluateJavascript` / `instantiateWasm`
