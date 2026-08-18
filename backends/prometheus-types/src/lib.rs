@@ -35,6 +35,18 @@ pub const EXTRACTOR_ARTIC: &str = "artic";
 /// Extractor id for Cleveland Museum of Art open-access objects.
 pub const EXTRACTOR_CLEVELAND_MUSEUM: &str = "cleveland-museum";
 
+/// Extractor id for Openverse image / audio works.
+pub const EXTRACTOR_OPENVERSE: &str = "openverse";
+
+/// Extractor id for Project Gutenberg ebook pages.
+pub const EXTRACTOR_GUTENBERG: &str = "gutenberg";
+
+/// Extractor id for ccMixter upload pages.
+pub const EXTRACTOR_CCMIXTER: &str = "ccmixter";
+
+/// Extractor id for Victoria and Albert Museum collection objects.
+pub const EXTRACTOR_VAM: &str = "vam";
+
 /// Transfer backend id for the in-process single-connection HTTP client.
 pub const TRANSFER_SIMPLE: &str = "simple";
 

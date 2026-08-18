@@ -2,11 +2,14 @@ use std::fs;
 use std::path::PathBuf;
 
 use prometheus_extractors::{
-    Artic, ClevelandArtworkRef, ClevelandMuseum, Extractor, InternetArchive, MetMuseum, NasaImages,
-    PeerTube, WikimediaCommons, artic_artwork_id, cleveland_artwork_ref, internet_archive_item_id,
-    media_from_api_json, media_from_artic_json, media_from_cleveland_json, media_from_met_json,
-    media_from_metadata_json, media_from_nasa_json, media_from_video_json, met_object_id, nasa_id,
-    peertube_watch_target, wikimedia_file_title,
+    Artic, CcMixter, ClevelandArtworkRef, ClevelandMuseum, Extractor, Gutenberg, InternetArchive,
+    MetMuseum, NasaImages, Openverse, OpenverseWorkKind, PeerTube, Vam, WikimediaCommons,
+    artic_artwork_id, ccmixter_upload_id, cleveland_artwork_ref, gutenberg_ebook_id,
+    internet_archive_item_id, media_from_api_json, media_from_artic_json, media_from_ccmixter_json,
+    media_from_cleveland_json, media_from_gutenberg_json, media_from_met_json,
+    media_from_metadata_json, media_from_nasa_json, media_from_openverse_json, media_from_vam_json,
+    media_from_video_json, met_object_id, nasa_id, openverse_work_target, peertube_watch_target,
+    vam_object_id, wikimedia_file_title,
 };
 
 fn fixture(name: &str) -> String {
@@ -312,5 +315,153 @@ fn live_cleveland_inspect_optional() {
             assert!(info.url.contains("openaccess-cdn.clevelandart.org"));
         }
         Err(err) => eprintln!("skip live cleveland-museum ({err})"),
+    }
+}
+
+#[test]
+fn parses_openverse_work_target() {
+    let image = openverse_work_target(
+        "https://openverse.org/image/79725d88-81f9-41e8-8f6c-b7dc0bbfcbea/the-moon-tonight",
+    )
+    .unwrap();
+    assert_eq!(image.kind, OpenverseWorkKind::Image);
+    assert_eq!(image.id, "79725d88-81f9-41e8-8f6c-b7dc0bbfcbea");
+    assert!(
+        Openverse
+            .matches("https://api.openverse.org/v1/audio/2c51e4eb-dbe7-468c-ba6c-d1c85a1b71ae/")
+    );
+    assert!(!Openverse.matches("https://openverse.org/search/?q=moon"));
+}
+
+#[test]
+fn media_from_openverse_image_fixture() {
+    let body = fixture("openverse_moon.json");
+    let info = media_from_openverse_json(&body).unwrap();
+    assert_eq!(info.extractor, "openverse");
+    assert_eq!(info.title.as_deref(), Some("The Moon tonight"));
+    assert!(info.url.contains("staticflickr.com"));
+}
+
+#[test]
+fn media_from_openverse_audio_fixture() {
+    let body = fixture("openverse_piano.json");
+    let info = media_from_openverse_json(&body).unwrap();
+    assert_eq!(info.extractor, "openverse");
+    assert_eq!(info.content_type.as_deref(), Some("audio/mpeg"));
+    assert_eq!(info.content_length, Some(227209));
+}
+
+#[test]
+fn parses_gutenberg_ebook_id() {
+    assert_eq!(gutenberg_ebook_id("https://www.gutenberg.org/ebooks/11").as_deref(), Some("11"));
+    assert_eq!(gutenberg_ebook_id("https://gutendex.com/books/11").as_deref(), Some("11"));
+    assert!(Gutenberg.matches("https://www.gutenberg.org/files/11/11-0.txt"));
+    assert!(!Gutenberg.matches("https://www.gutenberg.org/browse/scores/top"));
+}
+
+#[test]
+fn media_from_gutenberg_fixture() {
+    let body = fixture("gutenberg_alice.json");
+    let info = media_from_gutenberg_json(&body).unwrap();
+    assert_eq!(info.extractor, "gutenberg");
+    assert_eq!(info.title.as_deref(), Some("Alice's Adventures in Wonderland"));
+    assert!(info.url.contains(".epub"));
+}
+
+#[test]
+fn parses_ccmixter_upload_id() {
+    assert_eq!(
+        ccmixter_upload_id("https://ccmixter.org/files/grapes/16626").as_deref(),
+        Some("16626")
+    );
+    assert!(CcMixter.matches("https://ccmixter.org/api/query?f=json&ids=16626"));
+    assert!(!CcMixter.matches("https://ccmixter.org/view/media/remix"));
+}
+
+#[test]
+fn media_from_ccmixter_fixture() {
+    let body = fixture("ccmixter_16626.json");
+    let info = media_from_ccmixter_json(&body).unwrap();
+    assert_eq!(info.extractor, "ccmixter");
+    assert_eq!(info.title.as_deref(), Some("I dunno"));
+    assert_eq!(info.url, "https://ccmixter.org/content/grapes/grapes_-_I_dunno.mp3");
+    assert_eq!(info.content_type.as_deref(), Some("audio/mpeg"));
+}
+
+#[test]
+fn live_openverse_inspect_optional() {
+    if std::env::var_os("PROMETHEUS_LIVE_NET").is_none() {
+        return;
+    }
+    match Openverse.inspect("https://openverse.org/image/79725d88-81f9-41e8-8f6c-b7dc0bbfcbea") {
+        Ok(info) => {
+            assert_eq!(info.extractor, "openverse");
+            assert!(!info.url.is_empty());
+        }
+        Err(err) => eprintln!("skip live openverse ({err})"),
+    }
+}
+
+#[test]
+fn live_gutenberg_inspect_optional() {
+    if std::env::var_os("PROMETHEUS_LIVE_NET").is_none() {
+        return;
+    }
+    match Gutenberg.inspect("https://www.gutenberg.org/ebooks/11") {
+        Ok(info) => {
+            assert_eq!(info.extractor, "gutenberg");
+            assert!(info.url.contains("gutenberg.org"));
+        }
+        Err(err) => eprintln!("skip live gutenberg ({err})"),
+    }
+}
+
+#[test]
+fn live_ccmixter_inspect_optional() {
+    if std::env::var_os("PROMETHEUS_LIVE_NET").is_none() {
+        return;
+    }
+    match CcMixter.inspect("https://ccmixter.org/files/grapes/16626") {
+        Ok(info) => {
+            assert_eq!(info.extractor, "ccmixter");
+            assert!(info.url.contains("ccmixter.org/content/"));
+        }
+        Err(err) => eprintln!("skip live ccmixter ({err})"),
+    }
+}
+
+#[test]
+fn parses_vam_object_id() {
+    assert_eq!(
+        vam_object_id("https://collections.vam.ac.uk/item/O12511/window-frame/").as_deref(),
+        Some("O12511")
+    );
+    assert!(Vam.matches("https://api.vam.ac.uk/v2/object/O12511"));
+    assert!(!Vam.matches("https://collections.vam.ac.uk/search/"));
+}
+
+#[test]
+fn media_from_vam_fixture() {
+    let body = fixture("vam_o12511.json");
+    let info = media_from_vam_json(&body).unwrap();
+    assert_eq!(info.extractor, "vam");
+    assert_eq!(info.title.as_deref(), Some("Window frame"));
+    assert_eq!(
+        info.url,
+        "https://framemark.vam.ac.uk/collections/2007BM5784/full/max/0/default.jpg"
+    );
+}
+
+#[test]
+fn live_vam_inspect_optional() {
+    if std::env::var_os("PROMETHEUS_LIVE_NET").is_none() {
+        return;
+    }
+    match Vam.inspect("https://collections.vam.ac.uk/item/O12511/") {
+        Ok(info) => {
+            assert_eq!(info.extractor, "vam");
+            assert!(info.url.contains("framemark.vam.ac.uk"));
+        }
+        Err(err) => eprintln!("skip live vam ({err})"),
     }
 }

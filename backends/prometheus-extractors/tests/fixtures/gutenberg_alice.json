@@ -1,0 +1,14 @@
+{
+    "id": 11,
+    "title": "Alice's Adventures in Wonderland",
+    "formats": {
+        "text/html": "https://www.gutenberg.org/ebooks/11.html.images",
+        "application/epub+zip": "https://www.gutenberg.org/ebooks/11.epub3.images",
+        "application/x-mobipocket-ebook": "https://www.gutenberg.org/ebooks/11.kf8.images",
+        "application/rdf+xml": "https://www.gutenberg.org/ebooks/11.rdf",
+        "image/jpeg": "https://www.gutenberg.org/cache/epub/11/pg11.cover.medium.jpg",
+        "application/octet-stream": "https://www.gutenberg.org/files/11/11-0.zip",
+        "text/plain; charset=utf-8": "https://www.gutenberg.org/files/11/11-0.txt",
+        "text/plain; charset=us-ascii": "https://www.gutenberg.org/files/11/11-0.txt"
+    }
+}

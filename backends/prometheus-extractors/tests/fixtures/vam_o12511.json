@@ -1,0 +1,17 @@
+{
+    "meta": {
+        "images": {
+            "_primary_thumbnail": "https://framemark.vam.ac.uk/collections/2007BM5784/full/!100,100/0/default.jpg",
+            "_iiif_image": "https://framemark.vam.ac.uk/collections/2007BM5784/"
+        }
+    },
+    "record": {
+        "systemNumber": "O12511",
+        "titles": [
+            {
+                "title": "Window frame",
+                "type": "generic title"
+            }
+        ]
+    }
+}

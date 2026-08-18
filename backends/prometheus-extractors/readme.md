@@ -16,9 +16,13 @@ Not published to crates.io. Consumed by `prometheus-downloader` and exposed to J
 | `met-museum` | `MetMuseum` | `metmuseum.org/art/collection/search/{id}` | Collection API `primaryImage` |
 | `artic` | `Artic` | `artic.edu/artworks/{id}` | AIC API `image_id` → IIIF `full/max` JPEG |
 | `cleveland-museum` | `ClevelandMuseum` | `clevelandart.org/art/{accession}` | Open-access API → print-size JPEG |
+| `openverse` | `Openverse` | `openverse.org/image/{uuid}` / `/audio/{uuid}` | Catalog API work URL |
+| `gutenberg` | `Gutenberg` | `gutenberg.org/ebooks/{id}` | Gutendex `formats` → prefers audio, then EPUB |
+| `ccmixter` | `CcMixter` | `ccmixter.org/files/{user}/{id}` | Query API `files[].download_url` |
+| `vam` | `Vam` | `collections.vam.ac.uk/item/O…` | Object API IIIF `full/max` JPEG |
 | `generic-http` | `GenericHttp` | `http://` / `https://` | HEAD → Range → GET header probe; User-Agent `Prometheus/<version>` |
 
-Registry order: **local-file → internet-archive → wikimedia-commons → peertube → nasa-images → met-museum → artic → cleveland-museum → generic-http**.
+Registry order: **local-file → internet-archive → wikimedia-commons → peertube → nasa-images → met-museum → artic → cleveland-museum → openverse → gutenberg → ccmixter → vam → generic-http**.
 
 ```rust
 use prometheus_extractors::Registry;
