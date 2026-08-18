@@ -1,0 +1,25 @@
+[package]
+name = "prometheus-napi"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+publish = false
+description = "Node-API bindings for Prometheus"
+
+[lib]
+crate-type = ["cdylib"]
+name = "prometheus_napi"
+
+[dependencies]
+napi = { workspace = true }
+napi-derive = { workspace = true }
+prometheus-types = { workspace = true }
+prometheus-extractors = { workspace = true }
+prometheus-downloader = { workspace = true }
+prometheus-credential = { workspace = true }
+
+[build-dependencies]
+napi-build = "2"

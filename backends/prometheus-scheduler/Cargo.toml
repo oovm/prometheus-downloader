@@ -1,0 +1,13 @@
+[package]
+name = "prometheus-scheduler"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+publish = false
+description = "Download task scheduler for Prometheus"
+
+[dependencies]
+prometheus-types = { workspace = true }

@@ -1,0 +1,50 @@
+{
+  "name": "@doki-land/prometheus",
+  "version": "0.0.1",
+  "description": "Prometheus media acquisition CLI and Node API",
+  "license": "CC0-1.0",
+  "type": "module",
+  "bin": {
+    "prometheus": "./bin/prometheus.js"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "bin",
+    "dist",
+    "prometheus.node",
+    "Readme.md",
+    "License.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "node --test tests/smoke.test.mjs"
+  },
+  "dependencies": {
+    "commander": "^13.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.0",
+    "typescript": "^5.8.3"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oovm/prometheus-downloader.git"
+  },
+  "keywords": [
+    "prometheus",
+    "download",
+    "media",
+    "cli",
+    "mcp"
+  ]
+}

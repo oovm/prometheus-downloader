@@ -1,0 +1,44 @@
+[workspace]
+resolver = "2"
+members = [
+    "backends/prometheus-types",
+    "backends/prometheus-credential",
+    "backends/prometheus-extractors",
+    "backends/prometheus-downloader",
+    "backends/prometheus-processor",
+    "backends/prometheus-scheduler",
+    "backends/prometheus-napi",
+]
+default-members = [
+    "backends/prometheus-types",
+    "backends/prometheus-extractors",
+    "backends/prometheus-downloader",
+]
+
+[workspace.package]
+version = "0.0.1"
+edition = "2021"
+license = "CC0-1.0"
+authors = ["Prometheus Contributors"]
+repository = "https://github.com/oovm/prometheus-downloader"
+rust-version = "1.80"
+publish = false
+
+[workspace.dependencies]
+prometheus-types = { path = "backends/prometheus-types" }
+prometheus-credential = { path = "backends/prometheus-credential" }
+prometheus-extractors = { path = "backends/prometheus-extractors" }
+prometheus-downloader = { path = "backends/prometheus-downloader" }
+prometheus-processor = { path = "backends/prometheus-processor" }
+prometheus-scheduler = { path = "backends/prometheus-scheduler" }
+
+serde = { version = "1.0.219", features = ["derive"] }
+serde_json = "1.0.140"
+thiserror = "2.0.12"
+ureq = { version = "2.12.1", features = ["tls"] }
+napi = { version = "3.12.1", default-features = true, features = ["napi4"] }
+napi-derive = "3.6.3"
+
+[profile.release]
+lto = true
+codegen-units = 1

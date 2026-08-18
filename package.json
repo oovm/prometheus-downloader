@@ -1,0 +1,18 @@
+{
+  "name": "prometheus-downloader",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.27.0",
+  "license": "CC0-1.0",
+  "scripts": {
+    "napi:build": "node scripts/build-napi.mjs",
+    "build": "pnpm napi:build && pnpm --filter @doki-land/prometheus run build",
+    "test": "pnpm --filter @doki-land/prometheus run test",
+    "prometheus": "node frontends/prometheus/bin/prometheus.js"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.0",
+    "typescript": "^5.8.3"
+  }
+}

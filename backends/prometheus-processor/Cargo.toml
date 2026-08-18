@@ -1,0 +1,13 @@
+[package]
+name = "prometheus-processor"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+publish = false
+description = "Media post-processing for Prometheus"
+
+[dependencies]
+prometheus-types = { workspace = true }

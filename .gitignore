@@ -2,3 +2,35 @@
 *.iml
 .vscode/
 .vs/
+
+# Rust
+/target/
+**/*.rs.bk
+
+# Node / pnpm
+node_modules/
+**/dist/
+*.tsbuildinfo
+.pnpm-store/
+
+# Native addon (built locally)
+**/*.node
+!**/README.md
+
+# OS / misc
+.DS_Store
+Thumbs.db
+*.log
+tmp/
+.tmp/
+
+# Placeholder npm status / trust list cache (OTP window)
+.placeholder-npm-cache.json
+scripts/.placeholder-npm-cache.json
+.env.placeholder.local
+
+# Publish staging
+artifacts/
+dist/native-flat/
+dist/native-artifacts/
+
