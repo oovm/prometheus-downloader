@@ -1,7 +1,7 @@
 import { type DownloadResult, loadNative, type MediaInfo } from './native.js';
-import { inspectWithStrategies } from './strategies.js';
+import { inspectWithPlugins } from './plugins.js';
 
-export { bundledStrategies } from './strategies.js';
+export { bundledPlugins } from './plugins.js';
 export type { DownloadResult, MediaInfo };
 
 /** Native addon / package version. */
@@ -21,10 +21,10 @@ function fromNativeInfo(url: string): MediaInfo {
     };
 }
 
-/** Resolve media metadata for a URL. Tries strategy plugins, then the native engine. */
+/** Resolve media metadata for a URL. Tries plugins, then the native engine. */
 export async function info(url: string): Promise<MediaInfo> {
     try {
-        const fromPlugin = await inspectWithStrategies(url);
+        const fromPlugin = await inspectWithPlugins(url);
         if (fromPlugin) return fromPlugin;
     } catch {
         /* native fallback */

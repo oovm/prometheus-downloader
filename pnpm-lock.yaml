@@ -23,12 +23,12 @@ importers:
       '@doki-land/prometheus-plugin':
         specifier: workspace:*
         version: link:../prometheus-plugin
-      '@doki-land/prometheus-strategy-generic-http':
+      '@doki-land/prometheus-plugin-generic-http':
         specifier: workspace:*
-        version: link:../prometheus-strategy-generic-http
-      '@doki-land/prometheus-strategy-local-file':
+        version: link:../prometheus-plugin-generic-http
+      '@doki-land/prometheus-plugin-local-file':
         specifier: workspace:*
-        version: link:../prometheus-strategy-local-file
+        version: link:../prometheus-plugin-local-file
       '@doki-land/prometheus-torch':
         specifier: workspace:*
         version: link:../prometheus-torch
@@ -98,7 +98,7 @@ importers:
         specifier: ^5.8.3
         version: 5.9.3
 
-  frontends/prometheus-strategy-generic-http:
+  frontends/prometheus-plugin-generic-http:
     devDependencies:
       '@doki-land/prometheus-plugin':
         specifier: workspace:*
@@ -110,7 +110,7 @@ importers:
         specifier: ^5.8.3
         version: 5.9.3
 
-  frontends/prometheus-strategy-local-file:
+  frontends/prometheus-plugin-local-file:
     devDependencies:
       '@doki-land/prometheus-plugin':
         specifier: workspace:*

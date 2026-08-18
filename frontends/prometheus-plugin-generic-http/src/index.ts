@@ -1,4 +1,4 @@
-import type { MediaInfo, StrategyContext, StrategyPlugin } from '@doki-land/prometheus-plugin';
+import type { MediaInfo, Plugin, PluginContext } from '@doki-land/prometheus-plugin';
 
 const ID = 'generic-http';
 
@@ -22,7 +22,7 @@ function filenameFromDisposition(header: string | null): string | null {
     return null;
 }
 
-export async function inspect(url: string, _ctx: StrategyContext): Promise<MediaInfo> {
+export async function inspect(url: string, _ctx: PluginContext): Promise<MediaInfo> {
     const trimmed = url.trim();
     let contentType: string | null = null;
     let contentLength: number | null = null;
@@ -54,7 +54,7 @@ export function matches(url: string): boolean {
     return lower.startsWith('http://') || lower.startsWith('https://');
 }
 
-export const plugin: StrategyPlugin = {
+export const plugin: Plugin = {
     id: ID,
     matches,
     inspect,

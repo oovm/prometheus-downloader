@@ -140,7 +140,7 @@ test('cli --version', () => {
     assert.match(out.stdout.trim(), /^0\.0\.1$/);
 });
 
-test('info local-file strategy', async () => {
+test('info local-file plugin', async () => {
     const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'prometheus-file-'));
     const file = path.join(dir, 'clip.bin');
     fs.writeFileSync(file, 'abc');

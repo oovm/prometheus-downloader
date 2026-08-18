@@ -1,6 +1,6 @@
-# @doki-land/prometheus-strategy-generic-http
+# @doki-land/prometheus-plugin-generic-http
 
-Strategy plugin for direct `http://` and `https://` file URLs.
+Plugin for direct `http://` and `https://` file URLs.
 
 Loaded by `@doki-land/prometheus-plugin`. Transfer still uses the native engine.
 

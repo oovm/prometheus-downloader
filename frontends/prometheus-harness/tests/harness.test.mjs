@@ -5,7 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
 import { pathToFileURL } from 'node:url';
-import { createStrategy, fetchScript, fetchWasm, listStrategies, testStrategy, workspaceRoot } from '../dist/tools.js';
+import { createPlugin, fetchScript, fetchWasm, listPlugins, testPlugin, workspaceRoot } from '../dist/tools.js';
 
 test('harness workspace root', () => {
     const root = workspaceRoot();
@@ -19,7 +19,7 @@ test('harness-create writes scaffold', () => {
     const prev = process.env.PROMETHEUS_WORKSPACE;
     process.env.PROMETHEUS_WORKSPACE = tmp;
     try {
-        const result = createStrategy('demo-site');
+        const result = createPlugin('demo-site');
         assert.ok(fs.existsSync(path.join(result.path, 'src/index.ts')));
         assert.ok(fs.existsSync(path.join(result.path, 'package.json')));
     } finally {
@@ -29,10 +29,10 @@ test('harness-create writes scaffold', () => {
     }
 });
 
-test('plugin-load via list_strategies includes generic-http', async () => {
-    const listed = await listStrategies();
-    assert.ok(listed.strategies.some((item) => item.id === 'generic-http'));
-    assert.ok(listed.strategies.some((item) => item.id === 'local-file'));
+test('plugin-load via list_plugins includes generic-http', async () => {
+    const listed = await listPlugins();
+    assert.ok(listed.plugins.some((item) => item.id === 'generic-http'));
+    assert.ok(listed.plugins.some((item) => item.id === 'local-file'));
 });
 
 function serve(body, headers) {
@@ -60,14 +60,14 @@ function serve(body, headers) {
 }
 
 test('harness-test generic-http inspect', async () => {
-    const body = Buffer.from('hello-strategy');
+    const body = Buffer.from('hello-plugin');
     const { url, stop } = await serve(body, {
         'Content-Type': 'application/octet-stream',
         'Content-Length': String(body.length),
         'Content-Disposition': 'attachment; filename="clip.bin"',
     });
     try {
-        const result = await testStrategy('generic-http', url);
+        const result = await testPlugin('generic-http', url);
         assert.equal(result.success, true);
         assert.equal(result.media?.extractor, 'generic-http');
         assert.equal(result.media?.filename, 'clip.bin');
@@ -98,7 +98,7 @@ test('harness-test local-file inspect', async () => {
     const file = path.join(dir, 'note.bin');
     fs.writeFileSync(file, 'xyz');
     try {
-        const result = await testStrategy('local-file', pathToFileURL(file).href);
+        const result = await testPlugin('local-file', pathToFileURL(file).href);
         assert.equal(result.success, true);
         assert.equal(result.media?.extractor, 'local-file');
         assert.equal(result.media?.filename, 'note.bin');

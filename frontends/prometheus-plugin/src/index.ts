@@ -2,6 +2,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
+const PLUGIN_DIR_PREFIX = 'prometheus-plugin-';
+
 export type MediaInfo = {
     url: string;
     title?: string | null;
@@ -11,24 +13,24 @@ export type MediaInfo = {
     extractor: string;
 };
 
-export type StrategyContext = {
+export type PluginContext = {
     torch: {
         evaluateJavascript: (source: string, options?: Record<string, unknown>) => unknown;
         instantiateWasm: (bytes: BufferSource, imports?: WebAssembly.Imports) => Promise<WebAssembly.WebAssemblyInstantiatedSource>;
     };
 };
 
-export type StrategyPlugin = {
+export type Plugin = {
     id: string;
     matches: (url: string) => boolean;
-    inspect: (url: string, ctx: StrategyContext) => MediaInfo | Promise<MediaInfo>;
+    inspect: (url: string, ctx: PluginContext) => MediaInfo | Promise<MediaInfo>;
 };
 
-export type LoadedStrategy = {
+export type LoadedPlugin = {
     id: string;
     dir: string;
     packageName: string;
-    plugin: StrategyPlugin;
+    plugin: Plugin;
 };
 
 function readJson(file: string): Record<string, unknown> | null {
@@ -39,25 +41,24 @@ function readJson(file: string): Record<string, unknown> | null {
     }
 }
 
-function strategyIdFromPkg(pkg: Record<string, unknown>, dirName: string): string | null {
-    const mark = pkg.prometheusStrategy;
+function pluginIdFromPkg(pkg: Record<string, unknown>, dirName: string): string | null {
+    const mark = pkg.prometheusPlugin;
     if (mark && typeof mark === 'object' && mark !== null && typeof (mark as { id?: unknown }).id === 'string') {
         return (mark as { id: string }).id;
     }
     const name = typeof pkg.name === 'string' ? pkg.name : '';
-    const m = name.match(/prometheus-strategy-([a-z0-9-]+)$/);
+    const m = name.match(/prometheus-plugin-([a-z0-9-]+)$/);
     if (m) return m[1];
-    if (dirName.startsWith('prometheus-strategy-')) return dirName.slice('prometheus-strategy-'.length);
+    if (dirName.startsWith(PLUGIN_DIR_PREFIX)) return dirName.slice(PLUGIN_DIR_PREFIX.length);
     return null;
 }
 
-export function discoverStrategyDirs(workspaceRoot: string): string[] {
+export function discoverPluginDirs(workspaceRoot: string): string[] {
     const frontends = path.join(workspaceRoot, 'frontends');
     if (!fs.existsSync(frontends)) return [];
-    /** @type {string[]} */
     const out = [];
     for (const name of fs.readdirSync(frontends)) {
-        if (!name.startsWith('prometheus-strategy-')) continue;
+        if (!name.startsWith(PLUGIN_DIR_PREFIX)) continue;
         const dir = path.join(frontends, name);
         if (!fs.statSync(dir).isDirectory()) continue;
         const pkg = readJson(path.join(dir, 'package.json'));
@@ -67,7 +68,7 @@ export function discoverStrategyDirs(workspaceRoot: string): string[] {
     return out.sort();
 }
 
-async function importPlugin(dir: string): Promise<StrategyPlugin> {
+async function importPlugin(dir: string): Promise<Plugin> {
     const pkg = readJson(path.join(dir, 'package.json')) ?? {};
     const candidates = ['dist/index.js', 'src/index.ts', 'index.js'];
     let modPath: string | null = null;
@@ -79,27 +80,26 @@ async function importPlugin(dir: string): Promise<StrategyPlugin> {
         }
     }
     if (!modPath) {
-        throw new Error(`strategy module missing under ${dir}`);
+        throw new Error(`plugin module missing under ${dir}`);
     }
     const imported = (await import(pathToFileURL(modPath).href)) as {
-        default?: StrategyPlugin;
-        plugin?: StrategyPlugin;
+        default?: Plugin;
+        plugin?: Plugin;
         id?: string;
-        matches?: StrategyPlugin['matches'];
-        inspect?: StrategyPlugin['inspect'];
+        matches?: Plugin['matches'];
+        inspect?: Plugin['inspect'];
     };
-    const plugin = imported.default ?? imported.plugin ?? (imported as StrategyPlugin);
+    const plugin = imported.default ?? imported.plugin ?? (imported as Plugin);
     if (typeof plugin.matches !== 'function' || typeof plugin.inspect !== 'function') {
-        throw new Error(`invalid strategy exports in ${dir}`);
+        throw new Error(`invalid plugin exports in ${dir}`);
     }
-    const id = plugin.id || strategyIdFromPkg(pkg, path.basename(dir));
-    if (!id) throw new Error(`strategy id missing in ${dir}`);
+    const id = plugin.id || pluginIdFromPkg(pkg, path.basename(dir));
+    if (!id) throw new Error(`plugin id missing in ${dir}`);
     return { id, matches: plugin.matches, inspect: plugin.inspect };
 }
 
-export async function loadStrategies(workspaceRoot: string): Promise<LoadedStrategy[]> {
-    const dirs = discoverStrategyDirs(workspaceRoot);
-    /** @type {LoadedStrategy[]} */
+export async function loadPlugins(workspaceRoot: string): Promise<LoadedPlugin[]> {
+    const dirs = discoverPluginDirs(workspaceRoot);
     const loaded = [];
     for (const dir of dirs) {
         const pkg = readJson(path.join(dir, 'package.json')) ?? {};
@@ -114,6 +114,6 @@ export async function loadStrategies(workspaceRoot: string): Promise<LoadedStrat
     return loaded;
 }
 
-export function resolveStrategy(loaded: LoadedStrategy[], url: string): LoadedStrategy | undefined {
+export function resolvePlugin(loaded: LoadedPlugin[], url: string): LoadedPlugin | undefined {
     return loaded.find((item) => item.plugin.matches(url));
 }

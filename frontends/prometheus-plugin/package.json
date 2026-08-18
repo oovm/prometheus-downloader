@@ -1,7 +1,7 @@
 {
     "name": "@doki-land/prometheus-plugin",
     "version": "0.0.1",
-    "description": "Prometheus strategy plugin contract and loader",
+    "description": "Prometheus plugin contract and loader",
     "license": "CC0-1.0",
     "type": "module",
     "main": "./dist/index.js",

@@ -1,13 +1,13 @@
 {
-    "name": "@doki-land/prometheus-strategy-generic-http",
+    "name": "@doki-land/prometheus-plugin-local-file",
     "version": "0.0.1",
-    "description": "Prometheus strategy for direct HTTP(S) file URLs",
+    "description": "Prometheus plugin for local file URLs",
     "license": "CC0-1.0",
     "type": "module",
     "main": "./dist/index.js",
     "types": "./dist/index.d.ts",
-    "prometheusStrategy": {
-        "id": "generic-http"
+    "prometheusPlugin": {
+        "id": "local-file"
     },
     "exports": {
         ".": {
@@ -36,6 +36,6 @@
     },
     "keywords": [
         "prometheus",
-        "strategy"
+        "plugin"
     ]
 }

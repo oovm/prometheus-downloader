@@ -1,7 +1,7 @@
 {
     "name": "@doki-land/prometheus-harness",
     "version": "0.0.1",
-    "description": "MCP tools and CLI for authoring Prometheus strategy plugins",
+    "description": "MCP tools and CLI for authoring Prometheus plugins",
     "license": "CC0-1.0",
     "type": "module",
     "bin": {

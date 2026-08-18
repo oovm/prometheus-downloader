@@ -77,8 +77,8 @@ const JS_STUBS = [
     '@doki-land/prometheus-torch',
     '@doki-land/prometheus-plugin',
     '@doki-land/prometheus-harness',
-    '@doki-land/prometheus-strategy-generic-http',
-    '@doki-land/prometheus-strategy-local-file',
+    '@doki-land/prometheus-plugin-generic-http',
+    '@doki-land/prometheus-plugin-local-file',
     '@doki-land/prometheus-skills',
 ];
 

@@ -34,8 +34,8 @@ const NATIVE_PLATFORMS = [
 const JS_PACKAGES = [
     { dir: 'frontends/prometheus-torch', publishName: '@doki-land/prometheus-torch' },
     { dir: 'frontends/prometheus-plugin', publishName: '@doki-land/prometheus-plugin' },
-    { dir: 'frontends/prometheus-strategy-generic-http', publishName: '@doki-land/prometheus-strategy-generic-http' },
-    { dir: 'frontends/prometheus-strategy-local-file', publishName: '@doki-land/prometheus-strategy-local-file' },
+    { dir: 'frontends/prometheus-plugin-generic-http', publishName: '@doki-land/prometheus-plugin-generic-http' },
+    { dir: 'frontends/prometheus-plugin-local-file', publishName: '@doki-land/prometheus-plugin-local-file' },
     { dir: 'frontends/prometheus-harness', publishName: '@doki-land/prometheus-harness' },
     { dir: 'frontends/prometheus', publishName: '@doki-land/prometheus' },
 ];

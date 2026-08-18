@@ -27,8 +27,8 @@
     },
     "dependencies": {
         "@doki-land/prometheus-plugin": "workspace:*",
-        "@doki-land/prometheus-strategy-generic-http": "workspace:*",
-        "@doki-land/prometheus-strategy-local-file": "workspace:*",
+        "@doki-land/prometheus-plugin-generic-http": "workspace:*",
+        "@doki-land/prometheus-plugin-local-file": "workspace:*",
         "@doki-land/prometheus-torch": "workspace:*",
         "commander": "^13.1.0"
     },
