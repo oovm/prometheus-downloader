@@ -1,0 +1,17 @@
+{
+    "id": "nwqpxugw",
+    "type": "Image",
+    "thumbnail": {
+        "url": "https://iiif.wellcomecollection.org/image/B0008032/info.json"
+    },
+    "locations": [
+        {
+            "url": "https://iiif.wellcomecollection.org/image/B0008032/info.json"
+        }
+    ],
+    "source": {
+        "id": "zv3drmps",
+        "title": "Aurelia aurita the moon Jellyfish",
+        "type": "Work"
+    }
+}

@@ -11,9 +11,11 @@ mod internet_archive;
 mod local_file;
 mod met_museum;
 mod nasa_images;
+mod open_library;
 mod openverse;
 mod peertube;
 mod vam;
+mod wellcome;
 mod wikimedia_commons;
 
 pub use artic::{
@@ -38,12 +40,20 @@ pub use met_museum::{
     MetMuseum, media_from_object_json as media_from_met_json, object_id as met_object_id,
 };
 pub use nasa_images::{NasaImages, media_from_asset_json as media_from_nasa_json, nasa_id};
+pub use open_library::{
+    OpenLibrary, ResourceKind as OpenLibraryResourceKind, library_target as open_library_target,
+    media_from_library_json as media_from_open_library_json,
+};
 pub use openverse::{
     Openverse, WorkKind as OpenverseWorkKind, media_from_work_json as media_from_openverse_json,
     work_target as openverse_work_target,
 };
 pub use peertube::{PeerTube, media_from_video_json, watch_target as peertube_watch_target};
 pub use vam::{Vam, media_from_object_json as media_from_vam_json, object_id as vam_object_id};
+pub use wellcome::{
+    Wellcome, WellcomeTarget, media_from_image_json as media_from_wellcome_image_json,
+    media_from_work_json as media_from_wellcome_work_json, wellcome_target,
+};
 pub use wikimedia_commons::{
     WikimediaCommons, file_title as wikimedia_file_title, media_from_api_json,
 };
@@ -82,6 +92,8 @@ impl Registry {
                 Box::new(Gutenberg),
                 Box::new(CcMixter),
                 Box::new(Vam),
+                Box::new(OpenLibrary),
+                Box::new(Wellcome),
                 Box::new(GenericHttp),
             ],
         }

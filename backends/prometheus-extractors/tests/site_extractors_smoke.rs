@@ -3,13 +3,16 @@ use std::path::PathBuf;
 
 use prometheus_extractors::{
     Artic, CcMixter, ClevelandArtworkRef, ClevelandMuseum, Extractor, Gutenberg, InternetArchive,
-    MetMuseum, NasaImages, Openverse, OpenverseWorkKind, PeerTube, Vam, WikimediaCommons,
-    artic_artwork_id, ccmixter_upload_id, cleveland_artwork_ref, gutenberg_ebook_id,
-    internet_archive_item_id, media_from_api_json, media_from_artic_json, media_from_ccmixter_json,
+    MetMuseum, NasaImages, OpenLibrary, OpenLibraryResourceKind, Openverse, OpenverseWorkKind,
+    PeerTube, Vam, Wellcome, WellcomeTarget, WikimediaCommons, artic_artwork_id,
+    ccmixter_upload_id, cleveland_artwork_ref, gutenberg_ebook_id, internet_archive_item_id,
+    media_from_api_json, media_from_artic_json, media_from_ccmixter_json,
     media_from_cleveland_json, media_from_gutenberg_json, media_from_met_json,
-    media_from_metadata_json, media_from_nasa_json, media_from_openverse_json, media_from_vam_json,
-    media_from_video_json, met_object_id, nasa_id, openverse_work_target, peertube_watch_target,
-    vam_object_id, wikimedia_file_title,
+    media_from_metadata_json, media_from_nasa_json, media_from_open_library_json,
+    media_from_openverse_json, media_from_vam_json, media_from_video_json,
+    media_from_wellcome_image_json, met_object_id, nasa_id, open_library_target,
+    openverse_work_target, peertube_watch_target, vam_object_id, wellcome_target,
+    wikimedia_file_title,
 };
 
 fn fixture(name: &str) -> String {
@@ -463,5 +466,79 @@ fn live_vam_inspect_optional() {
             assert!(info.url.contains("framemark.vam.ac.uk"));
         }
         Err(err) => eprintln!("skip live vam ({err})"),
+    }
+}
+
+#[test]
+fn parses_open_library_target() {
+    let work =
+        open_library_target("https://openlibrary.org/works/OL45804W/Fantastic_Mr_Fox").unwrap();
+    assert_eq!(work.kind, OpenLibraryResourceKind::Work);
+    assert_eq!(work.id, "OL45804W");
+    assert!(OpenLibrary.matches("https://openlibrary.org/books/OL7353617M.json"));
+    assert!(!OpenLibrary.matches("https://openlibrary.org/authors/OL34184A"));
+}
+
+#[test]
+fn media_from_open_library_fixture() {
+    let body = fixture("openlibrary_fantastic_mr_fox.json");
+    let target = open_library_target("https://openlibrary.org/works/OL45804W").unwrap();
+    let info = media_from_open_library_json(&body, &target).unwrap();
+    assert_eq!(info.extractor, "open-library");
+    assert_eq!(info.title.as_deref(), Some("Fantastic Mr Fox"));
+    assert_eq!(info.url, "https://covers.openlibrary.org/b/id/6498519-L.jpg");
+}
+
+#[test]
+fn parses_wellcome_target() {
+    assert_eq!(
+        wellcome_target("https://wellcomecollection.org/works/zv3drmps/images?id=nwqpxugw"),
+        Some(WellcomeTarget::Image("nwqpxugw".into()))
+    );
+    assert_eq!(
+        wellcome_target("https://wellcomecollection.org/works/zv3drmps"),
+        Some(WellcomeTarget::Work("zv3drmps".into()))
+    );
+    assert!(Wellcome.matches("https://iiif.wellcomecollection.org/image/B0008032/info.json"));
+    assert!(!Wellcome.matches("https://wellcomecollection.org/search"));
+}
+
+#[test]
+fn media_from_wellcome_image_fixture() {
+    let body = fixture("wellcome_nwqpxugw.json");
+    let info = media_from_wellcome_image_json(&body).unwrap();
+    assert_eq!(info.extractor, "wellcome");
+    assert_eq!(info.title.as_deref(), Some("Aurelia aurita the moon Jellyfish"));
+    assert_eq!(
+        info.url,
+        "https://iiif.wellcomecollection.org/image/B0008032/full/max/0/default.jpg"
+    );
+}
+
+#[test]
+fn live_open_library_inspect_optional() {
+    if std::env::var_os("PROMETHEUS_LIVE_NET").is_none() {
+        return;
+    }
+    match OpenLibrary.inspect("https://openlibrary.org/works/OL45804W") {
+        Ok(info) => {
+            assert_eq!(info.extractor, "open-library");
+            assert!(info.url.contains("covers.openlibrary.org"));
+        }
+        Err(err) => eprintln!("skip live open-library ({err})"),
+    }
+}
+
+#[test]
+fn live_wellcome_inspect_optional() {
+    if std::env::var_os("PROMETHEUS_LIVE_NET").is_none() {
+        return;
+    }
+    match Wellcome.inspect("https://wellcomecollection.org/works/zv3drmps/images?id=nwqpxugw") {
+        Ok(info) => {
+            assert_eq!(info.extractor, "wellcome");
+            assert!(info.url.contains("iiif.wellcomecollection.org"));
+        }
+        Err(err) => eprintln!("skip live wellcome ({err})"),
     }
 }

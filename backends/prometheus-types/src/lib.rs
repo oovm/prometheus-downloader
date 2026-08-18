@@ -47,6 +47,12 @@ pub const EXTRACTOR_CCMIXTER: &str = "ccmixter";
 /// Extractor id for Victoria and Albert Museum collection objects.
 pub const EXTRACTOR_VAM: &str = "vam";
 
+/// Extractor id for Open Library works / editions.
+pub const EXTRACTOR_OPEN_LIBRARY: &str = "open-library";
+
+/// Extractor id for Wellcome Collection works / images.
+pub const EXTRACTOR_WELLCOME: &str = "wellcome";
+
 /// Transfer backend id for the in-process single-connection HTTP client.
 pub const TRANSFER_SIMPLE: &str = "simple";
 
