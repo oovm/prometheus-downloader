@@ -12,9 +12,13 @@ Not published to crates.io. Consumed by `prometheus-downloader` and exposed to J
 | `internet-archive` | `InternetArchive` | `archive.org/details/…` (also `/download/` / `/metadata/`) | Public metadata API → chooses a downloadable media file |
 | `wikimedia-commons` | `WikimediaCommons` | Commons / Wikipedia / sister-project `File:` pages | MediaWiki `imageinfo` API on that host → `upload.wikimedia.org` URL |
 | `peertube` | `PeerTube` | `/w/{id}`, `/videos/watch/{id}`, `/videos/embed/{id}` | Instance REST `GET /api/v1/videos/{id}` → highest-resolution `fileUrl` |
+| `nasa-images` | `NasaImages` | `images.nasa.gov/details-…` (also `/details/` and `/asset/`) | Public asset API → prefers `~orig` media href |
+| `met-museum` | `MetMuseum` | `metmuseum.org/art/collection/search/{id}` | Collection API `primaryImage` |
+| `artic` | `Artic` | `artic.edu/artworks/{id}` | AIC API `image_id` → IIIF `full/max` JPEG |
+| `cleveland-museum` | `ClevelandMuseum` | `clevelandart.org/art/{accession}` | Open-access API → print-size JPEG |
 | `generic-http` | `GenericHttp` | `http://` / `https://` | HEAD → Range → GET header probe; User-Agent `Prometheus/<version>` |
 
-Registry order: **local-file → internet-archive → wikimedia-commons → peertube → generic-http**.
+Registry order: **local-file → internet-archive → wikimedia-commons → peertube → nasa-images → met-museum → artic → cleveland-museum → generic-http**.
 
 ```rust
 use prometheus_extractors::Registry;

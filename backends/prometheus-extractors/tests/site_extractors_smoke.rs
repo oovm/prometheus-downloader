@@ -2,9 +2,11 @@ use std::fs;
 use std::path::PathBuf;
 
 use prometheus_extractors::{
-    Extractor, InternetArchive, PeerTube, WikimediaCommons, internet_archive_item_id,
-    media_from_api_json, media_from_metadata_json, media_from_video_json, peertube_watch_target,
-    wikimedia_file_title,
+    Artic, ClevelandArtworkRef, ClevelandMuseum, Extractor, InternetArchive, MetMuseum, NasaImages,
+    PeerTube, WikimediaCommons, artic_artwork_id, cleveland_artwork_ref, internet_archive_item_id,
+    media_from_api_json, media_from_artic_json, media_from_cleveland_json, media_from_met_json,
+    media_from_metadata_json, media_from_nasa_json, media_from_video_json, met_object_id, nasa_id,
+    peertube_watch_target, wikimedia_file_title,
 };
 
 fn fixture(name: &str) -> String {
@@ -162,5 +164,153 @@ fn live_peertube_inspect_optional() {
             assert!(info.url.contains("peertube2.cpy.re"));
         }
         Err(err) => eprintln!("skip live peertube ({err})"),
+    }
+}
+
+#[test]
+fn parses_nasa_images_id() {
+    assert_eq!(
+        nasa_id("https://images.nasa.gov/details-as11-40-5874").as_deref(),
+        Some("as11-40-5874")
+    );
+    assert_eq!(
+        nasa_id("https://images-api.nasa.gov/asset/as11-40-5874").as_deref(),
+        Some("as11-40-5874")
+    );
+    assert!(NasaImages.matches("https://images.nasa.gov/details/as11-40-5874"));
+    assert!(!NasaImages.matches("https://www.nasa.gov/news"));
+}
+
+#[test]
+fn media_from_nasa_fixture() {
+    let body = fixture("nasa_as11_40_5874.json");
+    let info = media_from_nasa_json(&body, "as11-40-5874").unwrap();
+    assert_eq!(info.extractor, "nasa-images");
+    assert_eq!(info.url, "https://images-assets.nasa.gov/image/as11-40-5874/as11-40-5874~orig.jpg");
+    assert_eq!(info.content_type.as_deref(), Some("image/jpeg"));
+}
+
+#[test]
+fn parses_met_object_id() {
+    assert_eq!(
+        met_object_id("https://www.metmuseum.org/art/collection/search/436535").as_deref(),
+        Some("436535")
+    );
+    assert!(
+        MetMuseum
+            .matches("https://collectionapi.metmuseum.org/public/collection/v1/objects/436535")
+    );
+    assert!(!MetMuseum.matches("https://www.metmuseum.org/visit"));
+}
+
+#[test]
+fn media_from_met_fixture() {
+    let body = fixture("met_wheat_field.json");
+    let info = media_from_met_json(&body).unwrap();
+    assert_eq!(info.extractor, "met-museum");
+    assert_eq!(info.title.as_deref(), Some("Wheat Field with Cypresses"));
+    assert!(info.url.contains("images.metmuseum.org"));
+}
+
+#[test]
+fn parses_artic_artwork_id() {
+    assert_eq!(
+        artic_artwork_id("https://www.artic.edu/artworks/129884-starry-night-and-the-astronauts")
+            .as_deref(),
+        Some("129884")
+    );
+    assert!(Artic.matches("https://api.artic.edu/api/v1/artworks/129884"));
+    assert!(!Artic.matches("https://www.artic.edu/iiif/2/abc/full/max/0/default.jpg"));
+}
+
+#[test]
+fn media_from_artic_fixture() {
+    let body = fixture("artic_129884.json");
+    let info = media_from_artic_json(&body).unwrap();
+    assert_eq!(info.extractor, "artic");
+    assert_eq!(info.title.as_deref(), Some("Starry Night and the Astronauts"));
+    assert!(info.url.contains("e966799b-97ee-1cc6-bd2f-a94b4b8bb8f9"));
+    assert!(info.url.ends_with("/full/max/0/default.jpg"));
+}
+
+#[test]
+fn parses_cleveland_artwork_ref() {
+    assert_eq!(
+        cleveland_artwork_ref("https://www.clevelandart.org/art/1915.534"),
+        Some(ClevelandArtworkRef::Accession("1915.534".into()))
+    );
+    assert_eq!(
+        cleveland_artwork_ref("https://openaccess-api.clevelandart.org/api/artworks/94979"),
+        Some(ClevelandArtworkRef::Id("94979".into()))
+    );
+    assert!(ClevelandMuseum.matches("https://www.clevelandart.org/art/1915.534"));
+    assert!(
+        !ClevelandMuseum
+            .matches("https://openaccess-cdn.clevelandart.org/1915.534/1915.534_web.jpg")
+    );
+}
+
+#[test]
+fn media_from_cleveland_fixture() {
+    let body = fixture("cleveland_1915_534.json");
+    let info = media_from_cleveland_json(&body).unwrap();
+    assert_eq!(info.extractor, "cleveland-museum");
+    assert_eq!(info.title.as_deref(), Some("Nathaniel Hurd"));
+    assert!(info.url.contains("1915.534_print.jpg"));
+}
+
+#[test]
+fn live_nasa_images_inspect_optional() {
+    if std::env::var_os("PROMETHEUS_LIVE_NET").is_none() {
+        return;
+    }
+    match NasaImages.inspect("https://images.nasa.gov/details-as11-40-5874") {
+        Ok(info) => {
+            assert_eq!(info.extractor, "nasa-images");
+            assert!(info.url.contains("images-assets.nasa.gov"));
+        }
+        Err(err) => eprintln!("skip live nasa-images ({err})"),
+    }
+}
+
+#[test]
+fn live_met_inspect_optional() {
+    if std::env::var_os("PROMETHEUS_LIVE_NET").is_none() {
+        return;
+    }
+    match MetMuseum.inspect("https://www.metmuseum.org/art/collection/search/436535") {
+        Ok(info) => {
+            assert_eq!(info.extractor, "met-museum");
+            assert!(info.url.contains("images.metmuseum.org"));
+        }
+        Err(err) => eprintln!("skip live met-museum ({err})"),
+    }
+}
+
+#[test]
+fn live_artic_inspect_optional() {
+    if std::env::var_os("PROMETHEUS_LIVE_NET").is_none() {
+        return;
+    }
+    match Artic.inspect("https://www.artic.edu/artworks/129884") {
+        Ok(info) => {
+            assert_eq!(info.extractor, "artic");
+            assert!(info.url.contains("artic.edu/iiif/"));
+        }
+        Err(err) => eprintln!("skip live artic ({err})"),
+    }
+}
+
+#[test]
+fn live_cleveland_inspect_optional() {
+    if std::env::var_os("PROMETHEUS_LIVE_NET").is_none() {
+        return;
+    }
+    match ClevelandMuseum.inspect("https://www.clevelandart.org/art/1915.534") {
+        Ok(info) => {
+            assert_eq!(info.extractor, "cleveland-museum");
+            assert!(info.url.contains("openaccess-cdn.clevelandart.org"));
+        }
+        Err(err) => eprintln!("skip live cleveland-museum ({err})"),
     }
 }

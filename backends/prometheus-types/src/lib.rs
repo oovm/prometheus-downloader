@@ -23,6 +23,18 @@ pub const EXTRACTOR_WIKIMEDIA_COMMONS: &str = "wikimedia-commons";
 /// Extractor id for PeerTube watch URLs (public REST API).
 pub const EXTRACTOR_PEERTUBE: &str = "peertube";
 
+/// Extractor id for NASA Images and Video Library pages.
+pub const EXTRACTOR_NASA_IMAGES: &str = "nasa-images";
+
+/// Extractor id for Metropolitan Museum of Art collection objects.
+pub const EXTRACTOR_MET_MUSEUM: &str = "met-museum";
+
+/// Extractor id for Art Institute of Chicago artworks.
+pub const EXTRACTOR_ARTIC: &str = "artic";
+
+/// Extractor id for Cleveland Museum of Art open-access objects.
+pub const EXTRACTOR_CLEVELAND_MUSEUM: &str = "cleveland-museum";
+
 /// Transfer backend id for the in-process single-connection HTTP client.
 pub const TRANSFER_SIMPLE: &str = "simple";
 
