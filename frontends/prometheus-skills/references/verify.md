@@ -40,7 +40,7 @@ console.log(version());
 | `prometheus: command not found` | Global bin not on PATH, or they used project-local | Ask: `npx prometheus`, or add a local script; do not silently `npm i -g` |
 | `native addon not found` / cannot load `.node` | `optionalDependencies` not resolved; wrong platform package; this clone without `pnpm napi:build` | **Stop.** Ask SKILL.md question 5 |
 | Version works, `info`/`download` throw | Addon loaded but network/URL invalid | Ask for a URL they can fetch; do not widen to Torch |
-| `info` 404 / extractor error on a media host | No extractor for that host yet, or not a direct file | Explain coverage is **hosts in the engine**; do not install Torch or a browser unless they explicitly need JS/WASM |
+| `info` 404 / extractor error on a media host | Published extractors / bundled plugins do not handle this host or inspect path | **Stop and ask** to start exploration with a new plugin — [plugin/references/explore.md](../plugin/references/explore.md). Do not install Torch or a browser unless they explicitly need JS/WASM |
 | Works locally, fails in CI | Runner OS/CPU differs; optional native omitted | Ask before adding `--omit=optional` workarounds |
 
 Typical native-missing message looks like: run `pnpm napi:build` (writes `frontends/prometheus-<os>-<cpu>/`). That hint is for **this clone**. On a registry install, add the matching `@doki-land/prometheus-<os>-<cpu>` package instead — after asking.
@@ -54,3 +54,5 @@ Native did not load — pick one, do not guess:
 - Leave JS installed; `info` / `download` will fail until the addon is present
 
 Do not “fix” verify by installing Torch, Playwright, or a headless browser.
+
+If verify succeeded as a CLI but **this URL/host** is outside the published extractors, that is not a failed setup — follow [../plugin/references/explore.md](../plugin/references/explore.md) and ask to create a plugin to explore.

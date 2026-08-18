@@ -7,7 +7,8 @@ description: >-
   with prometheus-harness create, implements matches/inspect, and tests.
   Use when the user wants to write, scaffold, or test a Prometheus plugin,
   mentions @doki-land/prometheus-harness, create_plugin, or
-  frontends/prometheus-plugin-*. Does not install Torch or Playwright unless
+  frontends/prometheus-plugin-*, or when the published product cannot handle
+  a new host / inspect path and exploration should start with a plugin. Does not install Torch or Playwright unless
   the user explicitly needs platform JS/WASM or a real browser.
 ---
 
@@ -21,7 +22,7 @@ Product setup (CLI / native) is a different skill: [../SKILL.md](../SKILL.md). D
 
 1. **Ask before strategy forks.** Plugin id, workspace root, sample URL, and Torch are not guessable. Use AskQuestion (1–2 questions per turn) or ask the same options in the user's language.
 2. A plugin only answers **matches** + **inspect** (`MediaInfo`). Transfer and disk IO stay in the native `@doki-land/prometheus-<os>-<cpu>` addon. Do not turn the plugin into a downloader.
-3. **Tool coverage means more media hosts** in the native engine. Shipped JS plugins (`generic-http`, `local-file`) are a **contract / Harness verification** surface. Do not stack npm plugins to “cover YouTube / Bilibili / …”. If they asked for a new **site**, say so and ask whether they still want a thin JS plugin.
+3. **Tool coverage means more media hosts** in the native engine. Shipped JS plugins (`generic-http`, `local-file`) are a **contract / Harness verification** surface — not the product’s site list. If they asked for a new **site**, say that. **If the published product cannot handle this host or inspect path**, do not stop at “wait for native”: ask to **create a plugin and start exploration** ([references/explore.md](references/explore.md)). Do not silently stack plugins or add Torch.
 4. **Never** default-install Playwright, Puppeteer, or a headless browser. Propose `@doki-land/prometheus-torch` only if they already said inspect must run platform JS / WASM.
 5. Harness `fetch_script` is HTTP GET of text. `fetch_wasm` compiles and lists exports. Do **not** deobfuscate scripts or decompile WASM. `capture_page` and `submit_pr` are stubs — use the host `gh` for PRs.
 6. Merges stay **human-reviewed**. Harness does not embed an LLM and does not auto-merge.
@@ -35,7 +36,7 @@ Skip a question only when this conversation already answered it.
 - Author / test a **plugin** in a Prometheus workspace
 - They only wanted the **product CLI** → switch to [../SKILL.md](../SKILL.md) and stop this skill
 
-If they said “add support for site X”, ask: native extractor (coverage) vs a JS plugin (Harness / inspect fallback)? Do not assume a new npm plugin.
+If they said “add support for site X”, or `info` / `download` failed on a URL the **published** packages do not handle: follow [references/explore.md](references/explore.md). Ask to create a plugin and start exploration. Do not assume a native-only wait, and do not assume they wanted a product npm extra.
 
 ### 2. Workspace
 
@@ -61,6 +62,7 @@ After answers, follow the guides. Do not skip test.
 | Guide | When | File |
 |-------|------|------|
 | **scaffold** | Workspace + id known | [references/scaffold.md](references/scaffold.md) |
+| **explore** | Published product cannot handle this host / inspect path | [references/explore.md](references/explore.md) |
 | **implement** | After `create`, before claiming it works | [references/implement.md](references/implement.md) |
 | **test** | After implement | [references/test.md](references/test.md) |
 | **torch** | Only if they need platform JS / WASM | [references/torch.md](references/torch.md) |

@@ -47,6 +47,10 @@ test('reference guides exist and tell the agent to ask', () => {
     const upgrade = read('references/upgrade.md');
     assert.match(upgrade, /Do \*\*not\*\* propose them at the end of a normal install|not default/i);
     assert.match(upgrade, /Playwright/);
+    assert.match(upgrade, /explore\.md/);
+    const verify = read('references/verify.md');
+    assert.match(verify, /explore\.md/);
+    assert.match(verify, /Create a new plugin|create a plugin/i);
 });
 
 test('plugin authoring skill is markdown and asks first', () => {
@@ -57,11 +61,14 @@ test('plugin authoring skill is markdown and asks first', () => {
     assert.match(text, /matches/);
     assert.doesNotMatch(text, /install-product|detect\.mjs/);
     assert.ok(text.split(/\r?\n/).length < 500);
-    for (const name of ['scaffold', 'implement', 'test', 'torch']) {
+    for (const name of ['scaffold', 'implement', 'test', 'torch', 'explore']) {
         const body = read(`plugin/references/${name}.md`);
         assert.ok(body.length > 80, `${name}.md too short`);
         assert.match(body, /Stop and ask/i);
     }
+    const explore = read('plugin/references/explore.md');
+    assert.match(explore, /Create a new plugin/);
+    assert.match(explore, /npx @doki-land\/prometheus-harness create/);
     const scaffold = read('plugin/references/scaffold.md');
     assert.match(scaffold, /npx @doki-land\/prometheus-harness create/);
 });

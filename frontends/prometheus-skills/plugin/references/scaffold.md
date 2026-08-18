@@ -6,6 +6,7 @@ Create a plugin package with Harness. Only after [SKILL.md](../SKILL.md) questio
 
 - They want a new `@doki-land/prometheus-plugin-<id>`
 - The id is kebab-case, starts with a letter, and the directory does not already exist
+- **Or** they agreed in [explore.md](explore.md): the published product cannot handle this host / inspect path, and they want a plugin to start exploration
 
 ## Steps
 
@@ -57,4 +58,4 @@ Do not run `create` in a random app folder that is not a Prometheus workspace.
 
 - Id or workspace still unknown
 - They wanted to extend `generic-http` / `local-file` instead of a new package
-- They wanted a native extractor for site coverage — confirm before scaffolding a JS plugin
+- They wanted a native extractor for site coverage **without** an exploration plugin — if the published version already failed on that URL, go to [explore.md](explore.md) and ask anyway
