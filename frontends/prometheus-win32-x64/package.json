@@ -1,0 +1,18 @@
+{
+  "name": "@doki-land/prometheus-win32-x64",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Prometheus native N-API addon for @doki-land/prometheus (win32-x64)",
+  "license": "CC0-1.0",
+  "os": [
+    "win32"
+  ],
+  "cpu": [
+    "x64"
+  ],
+  "main": "prometheus.win32-x64-msvc.node",
+  "files": [
+    "prometheus.win32-x64-msvc.node",
+    "README.md"
+  ]
+}

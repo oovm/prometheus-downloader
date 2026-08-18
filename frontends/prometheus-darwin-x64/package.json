@@ -1,0 +1,18 @@
+{
+  "name": "@doki-land/prometheus-darwin-x64",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Prometheus native N-API addon for @doki-land/prometheus (darwin-x64)",
+  "license": "CC0-1.0",
+  "os": [
+    "darwin"
+  ],
+  "cpu": [
+    "x64"
+  ],
+  "main": "prometheus.darwin-x64.node",
+  "files": [
+    "prometheus.darwin-x64.node",
+    "README.md"
+  ]
+}

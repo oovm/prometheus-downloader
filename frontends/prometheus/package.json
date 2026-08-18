@@ -18,7 +18,6 @@
   "files": [
     "bin",
     "dist",
-    "prometheus.node",
     "Readme.md",
     "License.md"
   ],
@@ -28,6 +27,14 @@
   },
   "dependencies": {
     "commander": "^13.1.0"
+  },
+  "optionalDependencies": {
+    "@doki-land/prometheus-win32-x64": "workspace:*",
+    "@doki-land/prometheus-win32-arm64": "workspace:*",
+    "@doki-land/prometheus-darwin-x64": "workspace:*",
+    "@doki-land/prometheus-darwin-arm64": "workspace:*",
+    "@doki-land/prometheus-linux-x64": "workspace:*",
+    "@doki-land/prometheus-linux-arm64": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^22.15.0",

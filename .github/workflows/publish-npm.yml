@@ -70,14 +70,15 @@ jobs:
           set -euo pipefail
           out="dist/${{ matrix.short }}"
           mkdir -p "$out"
-          src="frontends/prometheus"
+          src="frontends/prometheus-${{ matrix.short }}"
+          # One platform-named binary only (prometheus.<triple>.node) — never ship inside the JS package.
           named="prometheus.${{ matrix.triple }}.node"
-          if [[ -f "$src/prometheus.node" ]]; then
-            cp "$src/prometheus.node" "$out/$named"
-          elif [[ -f "$src/$named" ]]; then
+          if [[ -f "$src/$named" ]]; then
             cp "$src/$named" "$out/$named"
+          elif [[ -f "$src/prometheus.node" ]]; then
+            cp "$src/prometheus.node" "$out/$named"
           else
-            echo "missing native binary under $src" >&2
+            echo "missing native binary under $src (want $named)" >&2
             ls -la "$src" || true
             exit 1
           fi

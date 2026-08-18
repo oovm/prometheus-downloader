@@ -27,6 +27,37 @@ importers:
       typescript:
         specifier: ^5.8.3
         version: 5.9.3
+    optionalDependencies:
+      '@doki-land/prometheus-darwin-arm64':
+        specifier: workspace:*
+        version: link:../prometheus-darwin-arm64
+      '@doki-land/prometheus-darwin-x64':
+        specifier: workspace:*
+        version: link:../prometheus-darwin-x64
+      '@doki-land/prometheus-linux-arm64':
+        specifier: workspace:*
+        version: link:../prometheus-linux-arm64
+      '@doki-land/prometheus-linux-x64':
+        specifier: workspace:*
+        version: link:../prometheus-linux-x64
+      '@doki-land/prometheus-win32-arm64':
+        specifier: workspace:*
+        version: link:../prometheus-win32-arm64
+      '@doki-land/prometheus-win32-x64':
+        specifier: workspace:*
+        version: link:../prometheus-win32-x64
+
+  frontends/prometheus-darwin-arm64: {}
+
+  frontends/prometheus-darwin-x64: {}
+
+  frontends/prometheus-linux-arm64: {}
+
+  frontends/prometheus-linux-x64: {}
+
+  frontends/prometheus-win32-arm64: {}
+
+  frontends/prometheus-win32-x64: {}
 
 packages:
 

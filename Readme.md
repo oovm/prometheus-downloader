@@ -1,26 +1,16 @@
 # Prometheus
 
-Media acquisition CLI and Node API.
+Media acquisition for creators and agents.
 
 Current package version is `0.0.1` (development). Registry placeholder stubs use `0.0.0`.
 
-## Install
-
-```bash
-npm i -g @doki-land/prometheus
-```
-
 ## Usage
 
-```bash
-prometheus --version
-prometheus info <url>
-prometheus download <url> -o <dir>
-```
+Give your coding agent this prompt:
 
-```js
-import { info, download, version } from '@doki-land/prometheus'
-```
+> Install `@doki-land/prometheus-skills` and finish the Prometheus setup and configuration for this environment.
+
+That skill is the primary entry: it installs what you need and walks the remaining configuration. You should not rely on memorizing standalone CLI scripts.
 
 Use only with content you have the right to download. Stored credentials belong to you.
 

@@ -1,9 +1,8 @@
 import assert from 'node:assert/strict';
-import http from 'node:http';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { spawnSync } from 'node:child_process';
+import { spawn, spawnSync } from 'node:child_process';
 import test from 'node:test';
 import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
@@ -12,40 +11,95 @@ const pkgRoot = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const repoRoot = path.join(pkgRoot, '..', '..');
 const require = createRequire(import.meta.url);
 
+function currentPlatformShort() {
+  const { platform, arch } = process;
+  if (platform === 'win32' && arch === 'x64') return 'win32-x64';
+  if (platform === 'win32' && arch === 'arm64') return 'win32-arm64';
+  if (platform === 'darwin' && arch === 'arm64') return 'darwin-arm64';
+  if (platform === 'darwin' && arch === 'x64') return 'darwin-x64';
+  if (platform === 'linux' && arch === 'x64') return 'linux-x64';
+  if (platform === 'linux' && arch === 'arm64') return 'linux-arm64';
+  return `${platform}-${arch}`;
+}
+
 function ensureNative() {
-  const nodePath = path.join(pkgRoot, 'prometheus.node');
-  if (!fs.existsSync(nodePath)) {
+  const short = currentPlatformShort();
+  const nativeDir = path.join(repoRoot, 'frontends', `prometheus-${short}`);
+  const hasNode = fs.existsSync(nativeDir) && fs.readdirSync(nativeDir).some((f) => f.endsWith('.node'));
+  if (!hasNode) {
     const built = spawnSync('pnpm', ['napi:build'], {
       cwd: repoRoot,
       stdio: 'inherit',
+      shell: process.platform === 'win32',
     });
     assert.equal(built.status, 0, 'napi:build failed');
   }
-  assert.ok(fs.existsSync(nodePath), 'prometheus.node missing');
+  const after = fs.existsSync(nativeDir) && fs.readdirSync(nativeDir).some((f) => f.endsWith('.node'));
+  assert.ok(after, `native binary missing under frontends/prometheus-${short}`);
 }
 
-function startServer(body) {
-  return new Promise((resolve) => {
-    const server = http.createServer((req, res) => {
-      res.writeHead(200, {
-        'Content-Type': 'application/octet-stream',
-        'Content-Length': body.length,
-        'Content-Disposition': 'attachment; filename="smoke.bin"',
-      });
-      if (req.method === 'HEAD') {
-        res.end();
-        return;
+/**
+ * Serve a tiny fixture in a child process so sync N-API (ureq) does not deadlock
+ * the Node event loop that would otherwise own the HTTP server.
+ */
+function startFixtureServer(body) {
+  const script = `
+const http = require('node:http');
+const body = Buffer.from(${JSON.stringify(body.toString('base64'))}, 'base64');
+const server = http.createServer((req, res) => {
+  res.writeHead(200, {
+    'Content-Type': 'application/octet-stream',
+    'Content-Length': body.length,
+    'Content-Disposition': 'attachment; filename="smoke.bin"',
+  });
+  if (req.method === 'HEAD') { res.end(); return; }
+  res.end(body);
+});
+server.listen(0, '127.0.0.1', () => {
+  const port = server.address().port;
+  process.stdout.write(String(port) + '\\n');
+});
+`;
+  return new Promise((resolve, reject) => {
+    const child = spawn(process.execPath, ['-e', script], {
+      stdio: ['ignore', 'pipe', 'pipe'],
+    });
+    let stdout = '';
+    let settled = false;
+    const fail = (err) => {
+      if (settled) return;
+      settled = true;
+      try {
+        child.kill();
+      } catch {
+        /* ignore */
       }
-      res.end(body);
-    });
-    server.listen(0, '127.0.0.1', () => {
-      const address = server.address();
-      const port = typeof address === 'object' && address ? address.port : 0;
+      reject(err);
+    };
+    child.stdout.on('data', (chunk) => {
+      stdout += chunk.toString('utf8');
+      const line = stdout.split(/\r?\n/).find((s) => /^\d+$/.test(s.trim()));
+      if (!line || settled) return;
+      settled = true;
+      const port = Number(line.trim());
       resolve({
-        server,
         url: `http://127.0.0.1:${port}/smoke.bin`,
+        stop: () =>
+          new Promise((r) => {
+            child.once('exit', () => r());
+            child.kill();
+            setTimeout(r, 500);
+          }),
       });
     });
+    child.stderr.on('data', (chunk) => {
+      process.stderr.write(chunk);
+    });
+    child.on('error', fail);
+    child.on('exit', (code) => {
+      if (!settled) fail(new Error(`fixture server exited early (${code})`));
+    });
+    setTimeout(() => fail(new Error('fixture server timeout')), 10_000);
   });
 }
 
@@ -59,7 +113,7 @@ test('version matches package.json', async () => {
 test('info and download over local http', async () => {
   ensureNative();
   const body = Buffer.from('smoke-body');
-  const { server, url } = await startServer(body);
+  const { url, stop } = await startFixtureServer(body);
   try {
     const api = await import('../dist/index.js');
     const media = api.info(url);
@@ -72,7 +126,7 @@ test('info and download over local http', async () => {
     assert.equal(result.bytesWritten, body.length);
     fs.rmSync(dir, { recursive: true, force: true });
   } finally {
-    server.close();
+    await stop();
   }
 });
 

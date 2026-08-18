@@ -72,7 +72,7 @@ function loadLocalEnv(filePath) {
 const localEnv = loadLocalEnv(ENV_PATH);
 
 /** Keep in sync with scripts/ci/publish-npm.mjs (real publish package set). */
-const JS_STUBS = ['@doki-land/prometheus'];
+const JS_STUBS = ['@doki-land/prometheus', '@doki-land/prometheus-skills'];
 
 const NATIVE_STUBS = [
     { name: '@doki-land/prometheus-win32-x64', os: ['win32'], cpu: ['x64'] },
