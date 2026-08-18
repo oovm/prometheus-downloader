@@ -90,7 +90,7 @@ impl TransferBackend for SimpleTransfer {
     }
 }
 
-fn copy_local_file(
+pub(crate) fn copy_local_file(
     transfer_id: &str,
     request: &TransferRequest,
     progress: &mut dyn FnMut(ProgressEvent),

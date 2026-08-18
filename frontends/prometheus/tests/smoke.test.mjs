@@ -137,7 +137,10 @@ test('listTransfers and downloadWithEvents stay in-process', async () => {
     try {
         const api = await import('../dist/index.js');
         const listed = api.listTransfers();
-        assert.deepEqual(listed, [{ id: 'simple', available: true }]);
+        assert.deepEqual(listed, [
+            { id: 'simple', available: true },
+            { id: 'native-range', available: true },
+        ]);
 
         const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'prometheus-events-'));
         const result = api.downloadWithEvents(url, dir);

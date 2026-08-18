@@ -59,6 +59,9 @@ pub const EXTRACTOR_NETEASE_CLOUD: &str = "netease-cloud";
 /// Transfer backend id for the in-process single-connection HTTP client.
 pub const TRANSFER_SIMPLE: &str = "simple";
 
+/// Transfer backend id for the in-process multi-connection HTTP Range client.
+pub const TRANSFER_NATIVE_RANGE: &str = "native-range";
+
 /// Errors returned by engine crates.
 #[derive(Debug, Error)]
 pub enum Error {

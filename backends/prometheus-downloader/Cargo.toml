@@ -13,3 +13,5 @@ description = "HTTP downloader for Prometheus"
 prometheus-types = { workspace = true }
 prometheus-extractors = { workspace = true }
 ureq = { workspace = true }
+ripget = { workspace = true }
+tokio = { workspace = true }

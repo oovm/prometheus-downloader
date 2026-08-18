@@ -98,7 +98,7 @@ CamelCase wire shape shared with the native engine:
 | `finished` | Success (`path` set) |
 | `failed` | Error after start (or during setup) |
 
-`listTransfers()` currently returns `[{ id: 'simple', available: true }]`. Only backends **linked into** the `.node` addon are listed.
+`listTransfers()` currently returns `[{ id: 'simple', available: true }, { id: 'native-range', available: true }]`. Only backends **linked into** the `.node` addon are listed. Default `download` still uses `simple`.
 
 ### How `info` chooses a path
 

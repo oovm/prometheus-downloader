@@ -32,7 +32,11 @@ default_transfer_id() -> &'static str  // "simple"
 - HTTP(S): single-connection GET with `User-Agent: Prometheus/<version>`, chunked write, progress callbacks
 - `file:`: copy from the local path into the output directory with the same progress shape
 
-`list_transfers()` returns only backends **linked into** this crate (today: `simple` with `available: true`).
+## Range backend: `native-range`
+
+`NativeRangeTransfer` (`TRANSFER_NATIVE_RANGE`): in-process multi-connection HTTP Range for a **single file**. Linked into the same cdylib. `file:` still copies locally. Not the default `download` path.
+
+`list_transfers()` returns only backends **linked into** this crate (`simple` and `native-range`, each `available: true`). Default `download` still uses `simple`.
 
 ## Progress
 

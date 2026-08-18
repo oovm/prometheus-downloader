@@ -36,7 +36,7 @@ downloadWithEvents(media.url, './out');
 // result + events: started | bytes | finished | failed
 
 listTransfers();
-// [{ id: 'simple', available: true }]
+// [{ id: 'simple', available: true }, { id: 'native-range', available: true }]
 ```
 
 `extractor` is kebab-case (for example `generic-http`, `local-file`).

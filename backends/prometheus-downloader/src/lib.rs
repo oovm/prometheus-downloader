@@ -2,14 +2,19 @@
 
 #![deny(missing_docs)]
 
+mod native_range;
 mod simple;
 
+pub use native_range::NativeRangeTransfer;
 pub use simple::SimpleTransfer;
 
 use std::path::{Path, PathBuf};
 
 use prometheus_extractors::Registry;
-use prometheus_types::{DownloadResult, ProgressEvent, Result, TRANSFER_SIMPLE, sanitize_filename};
+use prometheus_types::{
+    DownloadResult, ProgressEvent, Result, TRANSFER_NATIVE_RANGE, TRANSFER_SIMPLE,
+    sanitize_filename,
+};
 
 /// Request handed to a [`TransferBackend`].
 #[derive(Debug, Clone)]
@@ -24,7 +29,7 @@ pub struct TransferRequest {
     pub expected_length: Option<u64>,
 }
 
-/// In-process transfer implementation (`simple` now; additional Range backends must stay in-process).
+/// In-process transfer implementation (`simple` default; `native-range` is linked alongside).
 pub trait TransferBackend: Send + Sync {
     /// Stable backend id (`kebab-case`).
     fn id(&self) -> &'static str;
@@ -83,7 +88,10 @@ pub fn default_transfer_id() -> &'static str {
 
 /// Describe built-in in-process transfer backends.
 pub fn list_transfers() -> Vec<TransferInfo> {
-    vec![TransferInfo { id: TRANSFER_SIMPLE.to_string(), available: true }]
+    vec![
+        TransferInfo { id: TRANSFER_SIMPLE.to_string(), available: true },
+        TransferInfo { id: TRANSFER_NATIVE_RANGE.to_string(), available: true },
+    ]
 }
 
 /// Snapshot of a transfer backend for discovery APIs.

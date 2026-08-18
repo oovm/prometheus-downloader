@@ -37,7 +37,7 @@ What works today on the happy path:
 - Torch `evaluateJavascript` / `instantiateWasm`
 - Harness plugin list / create / test / fetch helpers
 
-What is intentionally thin or stubbed: product MCP server, multi-connection Range transfer, real vault encryption, and **broad media-site coverage** beyond the extractors above (more hosts still to land in Rust).
+What is intentionally thin or stubbed: product MCP server, real vault encryption, making `native-range` the default transfer, and **broad media-site coverage** beyond the extractors above (more hosts still to land in Rust).
 
 ## Quick start (after install)
 
@@ -67,7 +67,7 @@ const withEvents = downloadWithEvents(media.url, './out');
 // { path, bytesWritten, filename, events: ProgressEvent[] }
 
 console.log(listTransfers());
-// [{ id: 'simple', available: true }]
+// [{ id: 'simple', available: true }, { id: 'native-range', available: true }]
 ```
 
 Node **≥ 20**. The matching platform optional dependency must resolve so the `.node` addon can load. In this monorepo, run `pnpm napi:build` on your host OS first.
