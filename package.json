@@ -9,7 +9,10 @@
     "napi:build": "node scripts/build-napi.mjs",
     "build": "pnpm napi:build && pnpm --filter @doki-land/prometheus run build",
     "test": "pnpm --filter @doki-land/prometheus run test",
-    "prometheus": "node frontends/prometheus/bin/prometheus.js"
+    "prometheus": "node frontends/prometheus/bin/prometheus.js",
+    "placeholder": "node scripts/ci/publish-placeholder.mjs",
+    "placeholder:publish": "node scripts/ci/publish-placeholder.mjs publish",
+    "placeholder:trust": "node scripts/ci/publish-placeholder.mjs trust"
   },
   "devDependencies": {
     "@types/node": "^22.15.0",
