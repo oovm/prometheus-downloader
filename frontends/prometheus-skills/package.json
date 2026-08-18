@@ -6,12 +6,15 @@
     "type": "module",
     "exports": {
         ".": "./SKILL.md",
-        "./SKILL.md": "./SKILL.md"
+        "./SKILL.md": "./SKILL.md",
+        "./plugin": "./plugin/SKILL.md",
+        "./plugin/SKILL.md": "./plugin/SKILL.md"
     },
     "files": [
         "SKILL.md",
         "README.md",
-        "references"
+        "references",
+        "plugin"
     ],
     "scripts": {
         "test": "node --test tests/skill.test.mjs"

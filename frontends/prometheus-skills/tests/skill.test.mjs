@@ -48,3 +48,20 @@ test('reference guides exist and tell the agent to ask', () => {
     assert.match(upgrade, /Do \*\*not\*\* propose them at the end of a normal install|not default/i);
     assert.match(upgrade, /Playwright/);
 });
+
+test('plugin authoring skill is markdown and asks first', () => {
+    const text = read('plugin/SKILL.md');
+    assert.match(text, /^---\r?\nname: prometheus-plugin\r?\n/);
+    assert.match(text, /AskQuestion/);
+    assert.match(text, /prometheus-harness create/);
+    assert.match(text, /matches/);
+    assert.doesNotMatch(text, /install-product|detect\.mjs/);
+    assert.ok(text.split(/\r?\n/).length < 500);
+    for (const name of ['scaffold', 'implement', 'test', 'torch']) {
+        const body = read(`plugin/references/${name}.md`);
+        assert.ok(body.length > 80, `${name}.md too short`);
+        assert.match(body, /Stop and ask/i);
+    }
+    const scaffold = read('plugin/references/scaffold.md');
+    assert.match(scaffold, /npx @doki-land\/prometheus-harness create/);
+});

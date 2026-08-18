@@ -21,7 +21,7 @@ pnpm add -D @doki-land/prometheus-harness
 # or: npm install -D @doki-land/prometheus-harness
 ```
 
-Then point them at the Harness package README (`@doki-land/prometheus-harness`) for `list` / `create` / `test` / `mcp`. Harness may depend on Torch so **authors** can test script-oriented plugins. That still must not be added to `@doki-land/prometheus`.
+Then follow the plugin authoring skill: [plugin/SKILL.md](../plugin/SKILL.md) (scaffold, implement, test). The Harness package README (`@doki-land/prometheus-harness`) has CLI / MCP flags. Harness may depend on Torch so **authors** can test script-oriented plugins. That still must not be added to `@doki-land/prometheus`.
 
 ## Torch (platform JS / WASM)
 

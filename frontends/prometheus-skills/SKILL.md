@@ -102,6 +102,7 @@ After answers, follow the matching guide. Do not skip verify.
 | **verify** | After configure; required before claiming success | [references/verify.md](references/verify.md) |
 | **upgrade** | Only if they asked for plugins or platform JS/WASM | [references/upgrade.md](references/upgrade.md) |
 | **usage** | After verify, or when they only want commands | [references/usage.md](references/usage.md) |
+| **plugin** | They want to **write** a plugin | [plugin/SKILL.md](plugin/SKILL.md) |
 
 ## Done when
 

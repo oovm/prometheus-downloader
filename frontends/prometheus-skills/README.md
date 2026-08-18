@@ -1,33 +1,39 @@
 # 🧭 @doki-land/prometheus-skills
 
-An **agent skill** for Prometheus setup: markdown your coding agent reads, not an installer binary.
+Agent **skills** (markdown) for Prometheus. This package is not an installer binary.
 
-> Ask your coding agent:  
-> `Install @doki-land/prometheus-skills and finish the Prometheus setup and configuration for this environment.`
+| Skill | Prompt / when |
+|-------|----------------|
+| Setup | `Install @doki-land/prometheus-skills and finish the Prometheus setup and configuration for this environment.` |
+| Plugin | User wants to write, scaffold, or test a `@doki-land/prometheus-plugin-<id>` package |
 
-The agent should **ask** at strategy forks (CLI vs this-repo development, package manager, local vs global, …), then install `@doki-land/prometheus` plus the matching `@doki-land/prometheus-<os>-<cpu>` addon using `npm` / `pnpm` / `bun`. Torch, Harness, Playwright, and headless browsers are **not** default.
+The agent should **ask** at strategy forks, then run `npm` / `pnpm` / `bun` / Harness itself. Torch, Playwright, and headless browsers are **not** default.
 
 ## What this package contains
 
 | File | Role |
 |------|------|
-| [`SKILL.md`](./SKILL.md) | When to use, hard rules, questions to ask, dispatch |
-| [`references/install.md`](./references/install.md) | Product install commands and failure handling |
-| [`references/configure.md`](./references/configure.md) | Output dir, napi build, CI vs local |
-| [`references/verify.md`](./references/verify.md) | `--version`, `info` / `download` smoke |
-| [`references/upgrade.md`](./references/upgrade.md) | Harness / Torch only when asked |
-| [`references/usage.md`](./references/usage.md) | Shortest CLI and Node API |
+| [`SKILL.md`](./SKILL.md) | Product setup: ask, install `@doki-land/prometheus` + native addon, verify |
+| [`references/`](./references/) | Setup guides: install, configure, verify, upgrade, usage |
+| [`plugin/SKILL.md`](./plugin/SKILL.md) | Plugin authoring: ask, Harness `create` / `test`, contract |
+| [`plugin/references/`](./plugin/references/) | Plugin guides: scaffold, implement, test, torch |
 
-There is no `bin` that installs other packages. After `npm install @doki-land/prometheus-skills`, open `node_modules/@doki-land/prometheus-skills/SKILL.md`. Optionally copy `SKILL.md` and `references/` into `.cursor/skills/prometheus-skills/` (project) or `~/.cursor/skills/prometheus-skills/` (personal).
+After `npm install @doki-land/prometheus-skills`, read those `SKILL.md` files. Optionally copy:
 
-## Product packages (installed by the agent, not by this skill)
+- Setup → `.cursor/skills/prometheus-skills/` (`SKILL.md` + `references/`)
+- Plugin → `.cursor/skills/prometheus-plugin/` (`plugin/SKILL.md` + `plugin/references/` as that folder’s `SKILL.md` + `references/`)
+
+Ask which destinations before copying.
+
+## Product vs plugins
 
 ```bash
 pnpm add @doki-land/prometheus
-# or: npm install @doki-land/prometheus
 ```
 
-Node **≥ 20**. Details: [`@doki-land/prometheus`](https://www.npmjs.com/package/@doki-land/prometheus).
+Plugins are a separate authoring path (`@doki-land/prometheus-harness`). Coverage of media **hosts** belongs in the native engine, not a pile of npm plugins.
+
+Node **≥ 20**. Details: [`@doki-land/prometheus`](https://www.npmjs.com/package/@doki-land/prometheus), [`@doki-land/prometheus-plugin`](https://www.npmjs.com/package/@doki-land/prometheus-plugin), [`@doki-land/prometheus-harness`](https://www.npmjs.com/package/@doki-land/prometheus-harness).
 
 ## License
 

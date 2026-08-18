@@ -14,7 +14,7 @@ Most download tooling either dumps everything into one giant script host, or shi
 
 | Layer | Package / artifact | Job |
 |-------|--------------------|-----|
-| Agent skill | `@doki-land/prometheus-skills` | Markdown guide: ask, then install the product packages |
+| Agent skill | `@doki-land/prometheus-skills` | Markdown: product setup and plugin authoring (ask first) |
 | Product entry | `@doki-land/prometheus` | CLI + Node API users actually call |
 | Script / WASM host | `@doki-land/prometheus-torch` | **Optional upgrade** — platform JS / WASM; not a product dependency |
 | Plugin contract | `@doki-land/prometheus-plugin` | Load `@doki-land/prometheus-plugin-*` modules for inspect / match |
@@ -84,7 +84,7 @@ prometheus/
 
 | Frontend package | Role |
 |------------------|------|
-| [`@doki-land/prometheus-skills`](./frontends/prometheus-skills) | Agent skill (markdown) for setup |
+| [`@doki-land/prometheus-skills`](./frontends/prometheus-skills) | Agent skills (markdown): product setup + plugin authoring |
 | [`@doki-land/prometheus`](./frontends/prometheus) | CLI / Node API |
 | [`@doki-land/prometheus-torch`](./frontends/prometheus-torch) | JS + WASM runtime |
 | [`@doki-land/prometheus-plugin`](./frontends/prometheus-plugin) | Plugin types + workspace loader |
